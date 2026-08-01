@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "19601961107",
+    "project_id": "swypher",
+    "storage_bucket": "swypher.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19601961107:android:b6c5f9db3b675815165d66",
+        "android_client_info": {
+          "package_name": "com.swypher.swypher_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQyvuSw6quwqpk9ycP2husew7bptn0lRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
