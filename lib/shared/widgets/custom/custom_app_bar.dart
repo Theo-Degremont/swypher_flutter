@@ -22,7 +22,7 @@ class CustomAppBar extends StatelessWidget {
         border: Border(
           bottom: BorderSide(
             color: AppColors.whiteColor.withValues(alpha: 0.1),
-            width: 2.0,
+            width: 1.0,
           ),
         ),
       ),
@@ -47,9 +47,9 @@ class CustomAppBar extends StatelessWidget {
               'Swypher',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 25.0.sp,
+                fontSize: 22.0.sp,
                 fontFamily: 'Poppins',
-                letterSpacing: 0,
+                letterSpacing: -1.5,
                 fontWeight: FontWeight.normal,
               ),
             ),
