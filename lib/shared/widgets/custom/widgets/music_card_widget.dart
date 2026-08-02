@@ -1,0 +1,354 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:swypher_flutter/shared/constants/constants.dart';
+import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
+import 'package:swypher_flutter/shared/widgets/custom/widgets/play_button_widget.dart';
+
+class MusicCardWidget extends StatelessWidget {
+  const MusicCardWidget({
+    super.key,
+    required this.songTitle,
+    required this.artistName,
+    required this.prodArtistName,
+    this.imageMusic,
+    required this.timeStamp,
+    required this.totalTime,
+    required this.id,
+  });
+
+  final String songTitle;
+  final String artistName;
+  final String prodArtistName;
+  final String? imageMusic;
+  final String timeStamp;
+  final String totalTime;
+  final int id;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 35.h),
+
+      height: 560.h,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+          color: AppColors.whiteColor.withValues(alpha: 0.1),
+          width: 1.0,
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 280.w,
+            height: 280.w,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.blackColor.withValues(alpha: 0.5),
+                  blurRadius: 15.0,
+                  offset: const Offset(0, 0),
+                ),
+              ],
+              gradient: RadialGradient(
+                stops: [0.0, 1.0],
+                colors: [Color(0xFF0A0A0A), AppColors.blackColor],
+                center: Alignment.center,
+              ),
+              shape: BoxShape.circle,
+              border: Border.all(color: Color(0xFF31253E), width: 5.0),
+            ),
+            child: Container(
+              margin: EdgeInsets.all(5.w),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.whiteColor.withValues(alpha: 0.1),
+                  width: 1.0,
+                ),
+              ),
+
+              child: Container(
+                margin: EdgeInsets.all(5.w),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.whiteColor.withValues(alpha: 0.1),
+                    width: 1.0,
+                  ),
+                ),
+                child: Container(
+                  margin: EdgeInsets.all(5.w),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.whiteColor.withValues(alpha: 0.1),
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.all(5.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.whiteColor.withValues(alpha: 0.1),
+                        width: 1.0,
+                      ),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.all(5.w),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColors.whiteColor.withValues(alpha: 0.1),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.all(5.w),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.whiteColor.withValues(alpha: 0.1),
+                            width: 1.0,
+                          ),
+                        ),
+                        child: Container(
+                          margin: EdgeInsets.all(5.w),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.whiteColor.withValues(
+                                alpha: 0.1,
+                              ),
+                              width: 1.0,
+                            ),
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.all(5.w),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.whiteColor.withValues(
+                                  alpha: 0.1,
+                                ),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Container(
+                              margin: EdgeInsets.all(5.w),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.whiteColor.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: Container(
+                                margin: EdgeInsets.all(5.w),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: AppColors.whiteColor.withValues(
+                                      alpha: 0.1,
+                                    ),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: Container(
+                                  margin: EdgeInsets.all(5.w),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.whiteColor.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  child: Container(
+                                    margin: EdgeInsets.all(5.w),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: AppColors.whiteColor.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    child: Container(
+                                      margin: EdgeInsets.all(5.w),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            AppColors
+                                                .primaryLinearGradientStart,
+                                            AppColors.primaryLinearGradientEnd,
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        border: Border.all(
+                                          color: Color(0xFF31253E),
+                                          width: 5.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            songTitle,
+            style: TextStyle(
+              color: AppColors.primaryTextColor,
+              fontSize: 24.sp,
+              letterSpacing: -0.5,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                artistName,
+                style: TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 14.sp,
+                  letterSpacing: 0.5,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: 5.w),
+              Container(
+                width: 4.w,
+                height: 4.w,
+                decoration: BoxDecoration(
+                  color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              SizedBox(width: 5.w),
+              Text(
+                prodArtistName,
+                style: TextStyle(
+                  color: AppColors.secondaryTextColor,
+                  fontSize: 14.sp,
+                  letterSpacing: 0.5,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Container(
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                ),
+                Container(
+                  height: 4.h,
+                  width: 100.w,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primaryLinearGradientStart,
+                        AppColors.primaryLinearGradientEnd,
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  timeStamp,
+                  style: TextStyle(
+                    color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
+                    fontSize: 12.sp,
+                    letterSpacing: 0.5,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                Text(
+                  totalTime,
+                  style: TextStyle(
+                    color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
+                    fontSize: 12.sp,
+                    letterSpacing: 0.5,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomIconButton(
+                onPressed: () {},
+                icon: Icons.repeat_sharp,
+                iconColor: AppColors.secondaryTextColor,
+              ),
+              CustomIconButton(
+                onPressed: () {},
+                icon: Icons.favorite_border_sharp,
+                iconColor: AppColors.secondaryTextColor,
+              ),
+              PlayButtonWidget(onPressed: () {}),
+              CustomIconButton(
+                onPressed: () {},
+                icon: Icons.chat_bubble_outline_sharp,
+                iconColor: AppColors.secondaryTextColor,
+              ),
+              CustomIconButton(
+                onPressed: () {},
+                icon: Icons.share_sharp,
+                iconColor: AppColors.secondaryTextColor,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
