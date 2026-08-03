@@ -35,7 +35,7 @@ class MainController extends GetxController {
     } else if (index == 2) {
       library.onInit();
     } else if (index == 3) {
-      goToRegister();
+      goToLogin();
       profile.onInit();
     } else if (index == 4) {
       record.onInit();
@@ -44,8 +44,10 @@ class MainController extends GetxController {
     
   }
 
-  void goToRegister() {
-    Get.toNamed(Routes.REGISTER); // Index de la page d'inscription
+  void goToLogin() {
+    Get.toNamed(Routes.LOGIN); // Index de la page d'inscription
   }
+
+
   
 }

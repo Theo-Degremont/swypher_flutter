@@ -2,26 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swypher_flutter/app/modules/login/services/login_service.dart';
 import 'package:swypher_flutter/app/modules/main/controllers/main_controller.dart';
-import 'package:swypher_flutter/app/modules/register/services/register_service.dart';
 import 'package:swypher_flutter/app/routes/app_pages.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
 
-class RegisterController extends GetxController {
+class LoginController extends GetxController {
   late final MainController mainController;
-  late final RegisterService _registerService;
+  late final LoginService _loginService;
 
   // ─── Focus nodes ────────────────────────────────────────────────────────────
-  final usernameFocusNode = FocusNode();
   final emailFocusNode    = FocusNode();
   final passwordFocusNode = FocusNode();
 
-  final usernameIsFocused = ValueNotifier<bool>(false);
   final emailIsFocused    = ValueNotifier<bool>(false);
   final passwordIsFocused = ValueNotifier<bool>(false);
 
   // ─── Text controllers ────────────────────────────────────────────────────────
-  final usernameController = TextEditingController();
   final emailController    = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -31,7 +28,6 @@ class RegisterController extends GetxController {
   final isButtonEnabled   = true.obs;
 
   // ─── Field errors ────────────────────────────────────────────────────────────
-  final usernameError = RxnString();
   final emailError    = RxnString();
   final passwordError = RxnString();
 
@@ -43,11 +39,8 @@ class RegisterController extends GetxController {
   void onInit() {
     super.onInit();
     mainController   = Get.find<MainController>();
-    _registerService = Get.find<RegisterService>();
+    _loginService = Get.find<LoginService>();
 
-    usernameFocusNode.addListener(() {
-      usernameIsFocused.value = usernameFocusNode.hasFocus;
-    });
     emailFocusNode.addListener(() {
       emailIsFocused.value = emailFocusNode.hasFocus;
     });
@@ -59,13 +52,10 @@ class RegisterController extends GetxController {
   @override
   void onClose() {
     _cooldownTimer?.cancel();
-    usernameFocusNode.dispose();
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
-    usernameIsFocused.dispose();
     emailIsFocused.dispose();
     passwordIsFocused.dispose();
-    usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
@@ -76,7 +66,6 @@ class RegisterController extends GetxController {
   void togglePasswordVisibility() => isPasswordVisible.toggle();
 
   void _clearErrors() {
-    usernameError.value = null;
     emailError.value    = null;
     passwordError.value = null;
   }
@@ -88,21 +77,20 @@ class RegisterController extends GetxController {
     });
   }
 
-  Future<void> register() async {
+  Future<void> login() async {
     if (!isButtonEnabled.value || isLoading.value) return;
 
     _clearErrors();
     isLoading.value = true;
 
-    final response = await _registerService.register(
-      pseudo:   usernameController.text.trim(),
+    final response = await _loginService.login(
       email:    emailController.text.trim(),
       password: passwordController.text,
     );
 
     isLoading.value = false;
 
-    print('=== REGISTER RESPONSE ===');
+    print('=== LOGIN RESPONSE ===');
     print('success     : ${response.success}');
     print('statusCode  : ${response.statusCode}');
     print('message     : ${response.message}');
@@ -117,12 +105,11 @@ class RegisterController extends GetxController {
     }
 
     // Erreurs par champ
-    usernameError.value = response.fieldError('pseudo');
     emailError.value    = response.fieldError('email');
     passwordError.value = response.fieldError('password');
 
     // Erreur globale en toast si aucune erreur de champ
-    final hasFieldErrors = usernameError.value != null ||
+    final hasFieldErrors =
         emailError.value != null ||
         passwordError.value != null;
 
@@ -143,7 +130,7 @@ class RegisterController extends GetxController {
     _startCooldown();
   }
 
-  void navigateToLogin() {
-    Get.offNamed(Routes.LOGIN);
+  void navigateToRegister() {
+    Get.offNamed(Routes.REGISTER);
   }
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:swypher_flutter/app/modules/login/controllers/login_controller.dart';
 import 'package:swypher_flutter/app/modules/register/controllers/register_controller.dart';
 import 'package:swypher_flutter/shared/constants/constants.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_field.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_page.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_text_button.dart';
 
-class RegisterView extends GetView<RegisterController> {
-  const RegisterView({super.key});
+class LoginView extends GetView<LoginController> {
+  const LoginView({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -28,7 +29,7 @@ class RegisterView extends GetView<RegisterController> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 30.h),
                 child: Text(
-                  'Inscription',
+                  'Connexion',
                   style: TextStyle(
                     fontSize: 24.sp,
                     color: AppColors.primaryTextColor,
@@ -53,21 +54,6 @@ class RegisterView extends GetView<RegisterController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Obx(
-                      () => CustomField(
-                        focusNode: controller.usernameFocusNode,
-                        isFocused: controller.usernameIsFocused,
-                        controller: controller.usernameController,
-                        labelText: 'Nom d\'utilisateur',
-                        hintText: 'Entrez votre nom d\'utilisateur',
-                        prefixIcon: Icons.person_outline,
-                        textInputAction: TextInputAction.next,
-                        errorText: controller.usernameError.value,
-                        onSubmitted: () => FocusScope.of(
-                          context,
-                        ).requestFocus(controller.emailFocusNode),
-                      ),
-                    ),
                     Obx(
                       () => CustomField(
                         focusNode: controller.emailFocusNode,
@@ -104,8 +90,8 @@ class RegisterView extends GetView<RegisterController> {
                     ),
                     Obx(
                       () => CustomTextButton(
-                        onPressed: controller.register,
-                        text: 'Créer mon compte',
+                        onPressed: controller.login,
+                        text: 'Se connecter',
                         isLoading: controller.isLoading.value,
                         isEnabled: controller.isButtonEnabled.value,
                       ),
@@ -116,7 +102,7 @@ class RegisterView extends GetView<RegisterController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Déjà un compte ?',
+                          'Pas encore de compte ?',
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: AppColors.secondaryTextColor,
@@ -127,9 +113,9 @@ class RegisterView extends GetView<RegisterController> {
                         ),
                         SizedBox(width: 5.w),
                         GestureDetector(
-                          onTap: () => controller.navigateToLogin(),
+                          onTap: () => controller.navigateToRegister(),
                           child: Text(
-                            'Connectez-vous',
+                            'Inscrivez-vous',
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: AppColors.primaryColor,

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/login/bindings/login_binding.dart';
+import '../modules/login/views/login_view.dart';
 import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
 import '../modules/register/bindings/register_binding.dart';
@@ -34,6 +36,13 @@ class AppPages {
       page: () => const RegisterView(),
       binding: RegisterBinding(),
       transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.LOGIN,
+      page: () => const LoginView(),
+      binding: LoginBinding(),
+            transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),
     ),
   ];
