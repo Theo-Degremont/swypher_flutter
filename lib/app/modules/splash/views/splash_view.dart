@@ -13,6 +13,10 @@ class SplashView extends GetView<SplashController> {
         padding: EdgeInsetsGeometry.only(bottom: 30.h),
         child: Stack(
           children: [
+            SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+            ),
             Positioned(
               top: -150.w,
               left: -50.h,
