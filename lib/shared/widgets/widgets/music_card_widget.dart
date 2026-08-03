@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:swypher_flutter/shared/constants/constants.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
-import 'package:swypher_flutter/shared/widgets/custom/widgets/play_button_widget.dart';
+import 'package:swypher_flutter/shared/widgets/widgets/play_button_widget.dart';
 
 class MusicCardWidget extends StatelessWidget {
   const MusicCardWidget({

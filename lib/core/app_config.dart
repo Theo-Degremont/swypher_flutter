@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:swypher_flutter/common/services/memory_service.dart';
+import 'package:swypher_flutter/shared/services/memory_service.dart';
 // import 'package:sifflard_flutter/common/services/audio_service.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 

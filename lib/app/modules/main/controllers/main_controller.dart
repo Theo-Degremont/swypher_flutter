@@ -1,18 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/home/controllers/home_controller.dart';
 import 'package:swypher_flutter/app/modules/library/controllers/library_controller.dart';
 import 'package:swypher_flutter/app/modules/profile/controllers/profile_controller.dart';
 import 'package:swypher_flutter/app/modules/music_studio/controllers/music_studio_controller.dart';
 import 'package:swypher_flutter/app/modules/search/controllers/search_controller.dart';
-import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/app/routes/app_pages.dart';
 
 class MainController extends GetxController {
   // Index de la page courante (0=Home, 1=Search, 2=Library, 3=Profile, 4=Record)
   final currentIndex = 0.obs;
-
-  // Couleur de fond dynamique de la navbar selon la page active
-  final navBarColor = Rx<Color>(AppColors.backgroundColor);
 
   // Références directes aux sous-contrôleurs
   late final HomeController home;
@@ -32,22 +28,24 @@ class MainController extends GetxController {
   }
 
   void changePage(int index) {
+    if (index == 0) {
+      home.onInit();
+    } else if (index == 1) {
+      search.onInit();
+    } else if (index == 2) {
+      library.onInit();
+    } else if (index == 3) {
+      goToRegister();
+      profile.onInit();
+    } else if (index == 4) {
+      record.onInit();
+    }
     currentIndex.value = index;
-    _updateNavBarColor(index);
+    
   }
 
-  void _updateNavBarColor(int index) {
-    switch (index) {
-      case 0:
-        navBarColor.value = AppColors.backgroundColor;
-      case 1:
-        navBarColor.value = AppColors.backgroundColor;
-      case 2:
-        navBarColor.value = AppColors.backgroundColor;
-      case 3:
-        navBarColor.value = AppColors.backgroundColor;
-      case 4:
-        navBarColor.value = AppColors.backgroundColor;
-    }
+  void goToRegister() {
+    Get.toNamed(Routes.REGISTER); // Index de la page d'inscription
   }
+  
 }

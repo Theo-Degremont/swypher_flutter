@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_nav_bar_tab.dart';
-import 'package:swypher_flutter/shared/widgets/custom/widgets/mic_button_widget.dart';
+import 'package:swypher_flutter/shared/widgets/widgets/mic_button_widget.dart';
 
 class CustomNavBar extends StatelessWidget {
   const CustomNavBar({
     super.key,
     this.currentIndex = 0,
     this.onTabSelected,
-    this.navBarColor,
   });
 
   final int currentIndex;
   final ValueChanged<int>? onTabSelected;
-
-  /// Couleur de fond de la navbar — animée lors des changements de page
-  final Color? navBarColor;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +28,7 @@ class CustomNavBar extends StatelessWidget {
             offset: const Offset(0, -4),
           ),
         ],
-        color: (navBarColor ?? AppColors.backgroundColor).withValues(alpha: 0.9),
+        color: AppColors.backgroundColor.withValues(alpha: 0.9),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(10.0),
           topRight: Radius.circular(10.0),
