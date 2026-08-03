@@ -53,50 +53,63 @@ class RegisterView extends GetView<RegisterController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CustomField(
-                      focusNode: controller.usernameFocusNode,
-                      isFocused: controller.usernameIsFocused,
-                      labelText: 'Nom d\'utilisateur',
-                      hintText: 'Entrez votre nom d\'utilisateur',
-                      prefixIcon: Icons.person_outline,
-                      textInputAction: TextInputAction.next,
-                      onSubmitted: () => FocusScope.of(
-                        context,
-                      ).requestFocus(controller.emailFocusNode),
+                    Obx(
+                      () => CustomField(
+                        focusNode: controller.usernameFocusNode,
+                        isFocused: controller.usernameIsFocused,
+                        controller: controller.usernameController,
+                        labelText: 'Nom d\'utilisateur',
+                        hintText: 'Entrez votre nom d\'utilisateur',
+                        prefixIcon: Icons.person_outline,
+                        textInputAction: TextInputAction.next,
+                        errorText: controller.usernameError.value,
+                        onSubmitted: () => FocusScope.of(
+                          context,
+                        ).requestFocus(controller.emailFocusNode),
+                      ),
                     ),
-                    CustomField(
-                      focusNode: controller.emailFocusNode,
-                      isFocused: controller.emailIsFocused,
-                      keyboardType: TextInputType.emailAddress,
-                      labelText: 'Email',
-                      hintText: 'Entrez votre adresse email',
-                      prefixIcon: Icons.email_outlined,
-                      textInputAction: TextInputAction.next,
-                      onSubmitted: () => FocusScope.of(
-                        context,
-                      ).requestFocus(controller.passwordFocusNode),
+                    Obx(
+                      () => CustomField(
+                        focusNode: controller.emailFocusNode,
+                        isFocused: controller.emailIsFocused,
+                        controller: controller.emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        labelText: 'Email',
+                        hintText: 'Entrez votre adresse email',
+                        prefixIcon: Icons.email_outlined,
+                        textInputAction: TextInputAction.next,
+                        errorText: controller.emailError.value,
+                        onSubmitted: () => FocusScope.of(
+                          context,
+                        ).requestFocus(controller.passwordFocusNode),
+                      ),
                     ),
                     Obx(
                       () => CustomField(
                         focusNode: controller.passwordFocusNode,
                         isFocused: controller.passwordIsFocused,
+                        controller: controller.passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         height: 130,
                         labelText: 'Mot de passe',
                         hintText: 'Entrez votre mot de passe',
                         prefixIcon: Icons.lock_outline,
-                        obscureText: controller.isPasswordVisible.value
-                            ? false
-                            : true,
+                        obscureText: !controller.isPasswordVisible.value,
                         showEyeIcon: true,
-                        onTapEye: () => controller.togglePasswordVisibility(),
+                        onTapEye: controller.togglePasswordVisibility,
                         textInputAction: TextInputAction.done,
+                        errorText: controller.passwordError.value,
                         onSubmitted: () => FocusScope.of(context).unfocus(),
                       ),
                     ),
-                    CustomTextButton(
-                      onPressed: () {},
-                      text: 'Créer mon compte',
+                    Obx(
+                      () => CustomTextButton(
+                        onPressed: controller.register,
+                        text: 'Créer mon compte',
+                        isLoading: controller.isLoading.value,
+                        isEnabled: controller.isButtonEnabled.value,
+                      ),
+
                     ),
                     SizedBox(height: 20.h),
                     Row(

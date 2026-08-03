@@ -11,6 +11,8 @@ class CustomTextButton extends StatefulWidget {
     this.secondaryGradientColor,
     required this.text,
     this.borderRadius = 15.0,
+    this.isLoading = false,
+    this.isEnabled = true,
   });
 
   final VoidCallback? onPressed;
@@ -19,6 +21,8 @@ class CustomTextButton extends StatefulWidget {
   final Color? secondaryGradientColor;
   final String text;
   final double borderRadius;
+  final bool isLoading;
+  final bool isEnabled;
 
   @override
   State<CustomTextButton> createState() => _CustomTextButtonState();
@@ -29,47 +33,66 @@ class _CustomTextButtonState extends State<CustomTextButton> {
 
   @override
   Widget build(BuildContext context) {
+    final canTap = widget.isEnabled && !widget.isLoading;
+
     return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) {
-        setState(() => _isPressed = false);
-        widget.onPressed?.call();
-      },
-      onTapCancel: () => setState(() => _isPressed = false),
+      onTapDown: canTap ? (_) => setState(() => _isPressed = true) : null,
+      onTapUp: canTap
+          ? (_) {
+              setState(() => _isPressed = false);
+              widget.onPressed?.call();
+            }
+          : null,
+      onTapCancel: canTap ? () => setState(() => _isPressed = false) : null,
       child: AnimatedScale(
         scale: _isPressed ? 0.95 : 1.0,
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeInOut,
-        child: Container(
-          alignment: Alignment.center,
-          height: widget.height.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.borderRadius.w),
-            gradient: LinearGradient(
-              colors: [
-                widget.primaryGradientColor ?? AppColors.primaryLinearGradientStart,
-                widget.secondaryGradientColor ?? AppColors.primaryLinearGradientEnd,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.tertiaryColor.withValues(alpha: 0.5),
-                blurRadius: 15.0,
-                offset: const Offset(0, 0),
+        child: AnimatedOpacity(
+          opacity: canTap ? 1.0 : 0.5,
+          duration: const Duration(milliseconds: 200),
+          child: Container(
+            alignment: Alignment.center,
+            height: widget.height.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(widget.borderRadius.w),
+              gradient: LinearGradient(
+                colors: [
+                  widget.primaryGradientColor ?? AppColors.primaryLinearGradientStart,
+                  widget.secondaryGradientColor ?? AppColors.primaryLinearGradientEnd,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            ],
-          ),
-          child: Text(
-            widget.text.toUpperCase(),
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-              color: AppColors.secondaryColor,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.tertiaryColor.withValues(alpha: 0.5),
+                  blurRadius: 15.0,
+                  offset: const Offset(0, 0),
+                ),
+              ],
             ),
+            child: widget.isLoading
+                ? SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.secondaryColor,
+                      ),
+                    ),
+                  )
+                : Text(
+                    widget.text.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                      color: AppColors.secondaryColor,
+                    ),
+                  ),
           ),
         ),
       ),

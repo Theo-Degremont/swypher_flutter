@@ -7,6 +7,7 @@ class CustomField extends StatelessWidget {
     super.key,
     required this.focusNode,
     required this.isFocused,
+    this.controller,
     this.height = 110.0,
     required this.labelText,
     required this.hintText,
@@ -18,11 +19,12 @@ class CustomField extends StatelessWidget {
     this.onSubmitted,
     this.obscureText = false,
     this.showEyeIcon = false,
-    this.onTapEye, // Add this line to define the onTapEye variable
+    this.onTapEye,
   });
 
   final FocusNode focusNode;
   final ValueNotifier<bool> isFocused;
+  final TextEditingController? controller;
   final double height;
   final String labelText;
   final String hintText;
@@ -34,8 +36,7 @@ class CustomField extends StatelessWidget {
   final VoidCallback? onSubmitted;
   final bool obscureText;
   final bool showEyeIcon;
-  final VoidCallback?
-  onTapEye; // Add this line to define the showEyeIcon variable
+  final VoidCallback? onTapEye;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +64,7 @@ class CustomField extends StatelessWidget {
             valueListenable: isFocused,
             builder: (context, isFocused, _) {
               return TextField(
+                controller: controller,
                 obscureText: obscureText,
                 keyboardType: keyboardType,
                 textInputAction: textInputAction,
