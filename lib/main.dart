@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:swypher_flutter/common/local/localization_service.dart';
-import 'package:swypher_flutter/common/services/memory_service.dart';
+
 import 'package:swypher_flutter/core/app_config.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/local/localization_service.dart';
+import 'package:swypher_flutter/shared/services/memory_service.dart';
 import 'app/routes/app_pages.dart';
 
 Future<void> main() async {

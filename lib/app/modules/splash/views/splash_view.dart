@@ -13,6 +13,46 @@ class SplashView extends GetView<SplashController> {
         padding: EdgeInsetsGeometry.only(bottom: 30.h),
         child: Stack(
           children: [
+            SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+            ),
+            Positioned(
+              top: -150.w,
+              left: -50.h,
+              child: Container(
+                width: 200.w,
+                height: 400.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  // color: AppColors.whiteColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
+                      blurRadius: 120,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: -150.w,
+              right: -50.h,
+              child: Container(
+                width: 200.w,
+                height: 400.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  // color: AppColors.whiteColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
+                      blurRadius: 120,
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Align(
               alignment: Alignment.center,
               child: Column(
@@ -60,7 +100,9 @@ class SplashView extends GetView<SplashController> {
                           AnimatedBuilder(
                             animation: controller.shimmerController,
                             builder: (context, _) {
-                              final offset = (controller.shimmerController.value * 2 - 1) * 180.w;
+                              final offset =
+                                  (controller.shimmerController.value * 2 - 1) *
+                                  180.w;
                               return Transform.translate(
                                 offset: Offset(offset, 0),
                                 child: Container(
@@ -102,35 +144,39 @@ class SplashView extends GetView<SplashController> {
                       ),
                       SizedBox(
                         width: 20.w,
-                        child: Obx(() => Text(
-                          controller.dots.value,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontFamily: montserratFontFamily,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                            color: AppColors.secondaryTextColor.withValues(
-                              alpha: 0.4,
+                        child: Obx(
+                          () => Text(
+                            controller.dots.value,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: montserratFontFamily,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              color: AppColors.secondaryTextColor.withValues(
+                                alpha: 0.4,
+                              ),
                             ),
                           ),
-                        )),
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(height: 20.h),
-                  Obx(() => Text(
-                    controller.version.value.isEmpty
-                        ? ''
-                        : 'Version ${controller.version.value}'.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontFamily: montserratFontFamily,
-                      letterSpacing: 1.5,
-                      color: AppColors.secondaryTextColor.withValues(
-                        alpha: 0.3,
+                  Obx(
+                    () => Text(
+                      controller.version.value.isEmpty
+                          ? ''
+                          : 'Version ${controller.version.value}'.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontFamily: montserratFontFamily,
+                        letterSpacing: 1.5,
+                        color: AppColors.secondaryTextColor.withValues(
+                          alpha: 0.3,
+                        ),
                       ),
                     ),
-                  )),
+                  ),
                 ],
               ),
             ),

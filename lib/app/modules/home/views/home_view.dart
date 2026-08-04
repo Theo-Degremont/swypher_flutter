@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
-import 'package:swypher_flutter/shared/widgets/custom/widgets/music_card_widget.dart';
+import 'package:swypher_flutter/shared/widgets/widgets/music_card_widget.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {

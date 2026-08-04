@@ -1,20 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/home/controllers/home_controller.dart';
 import 'package:swypher_flutter/app/modules/library/controllers/library_controller.dart';
 import 'package:swypher_flutter/app/modules/profile/controllers/profile_controller.dart';
 import 'package:swypher_flutter/app/modules/music_studio/controllers/music_studio_controller.dart';
 import 'package:swypher_flutter/app/modules/search/controllers/search_controller.dart';
-import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/app/routes/app_pages.dart';
+import 'package:swypher_flutter/shared/services/memory_service.dart';
 
 class MainController extends GetxController {
-  // Index de la page courante (0=Home, 1=Search, 2=Library, 3=Profile, 4=Record)
   final currentIndex = 0.obs;
 
-  // Couleur de fond dynamique de la navbar selon la page active
-  final navBarColor = Rx<Color>(AppColors.backgroundColor);
+  final isLoggedIn = false.obs;
 
-  // Références directes aux sous-contrôleurs
+  static const _protectedIndices = {2, 3, 4};
+
   late final HomeController home;
   late final SearchPageController search;
   late final LibraryController library;
@@ -24,30 +23,37 @@ class MainController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    home = Get.find<HomeController>();
+    isLoggedIn.value = MemoryService.instance.access != null;
+
+    home   = Get.find<HomeController>();
     search = Get.find<SearchPageController>();
     library = Get.find<LibraryController>();
     profile = Get.find<ProfileController>();
-    record = Get.find<MusicStudioController>();
+    record  = Get.find<MusicStudioController>();
   }
 
   void changePage(int index) {
+    if (_protectedIndices.contains(index) && !isLoggedIn.value) {
+      _goToLogin();
+      return;
+    }
+
+    switch (index) {
+      case 0: home.onInit();
+      case 1: search.onInit();
+      case 2: library.onInit();
+      case 3: profile.onInit();
+      case 4: record.onInit();
+    }
+
     currentIndex.value = index;
-    _updateNavBarColor(index);
   }
 
-  void _updateNavBarColor(int index) {
-    switch (index) {
-      case 0:
-        navBarColor.value = AppColors.backgroundColor;
-      case 1:
-        navBarColor.value = AppColors.backgroundColor;
-      case 2:
-        navBarColor.value = AppColors.backgroundColor;
-      case 3:
-        navBarColor.value = AppColors.backgroundColor;
-      case 4:
-        navBarColor.value = AppColors.backgroundColor;
-    }
+  Future<void> _goToLogin() async {
+    await Get.toNamed(Routes.LOGIN);
+    currentIndex.value = 0;
+    isLoggedIn.value = MemoryService.instance.access != null;
   }
+
+
 }
