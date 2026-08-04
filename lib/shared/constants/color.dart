@@ -6,6 +6,7 @@ class AppColors {
   static Color primaryColor = Color(0xFFFEA9FF);
   static Color secondaryColor = Color(0xFF650525);
   static Color tertiaryColor = Color(0xFFFFB2BD);
+  static Color quaternaryColor = Color(0xFF3C2F4A);
 
   static Color primaryTextColor = Color(0xFFEFDBFE);
   static Color secondaryTextColor = Color(0xFFDCC0C3);

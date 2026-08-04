@@ -1,3 +1,5 @@
 import 'package:get/get.dart';
 
-class MusicStudioController extends GetxController {}
+class MusicStudioController extends GetxController {
+  
+}
