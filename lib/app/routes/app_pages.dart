@@ -8,6 +8,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/upload_music/bindings/upload_music_binding.dart';
+import '../modules/upload_music/views/upload_music_view.dart';
 
 part 'app_routes.dart';
 
@@ -42,7 +44,14 @@ class AppPages {
       name: _Paths.LOGIN,
       page: () => const LoginView(),
       binding: LoginBinding(),
-            transition: Transition.fadeIn,
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.UPLOAD_MUSIC,
+      page: () => const UploadMusicView(),
+      binding: UploadMusicBinding(),
+      transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),
     ),
   ];

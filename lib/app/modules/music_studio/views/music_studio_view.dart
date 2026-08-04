@@ -45,7 +45,7 @@ class MusicStudioView extends GetView<MusicStudioController> {
           icon: Icons.mic_sharp,
           isGradient: true,
           onPressed: () {
-            // Handle button tap
+
           },
         ),
         CustomBlocButton(
@@ -54,7 +54,7 @@ class MusicStudioView extends GetView<MusicStudioController> {
           icon: Icons.upload_file_outlined,
           isGradient: false,
           onPressed: () {
-            // Handle button tap
+            controller.goToUploadMusic();
           },
         ),
       ],

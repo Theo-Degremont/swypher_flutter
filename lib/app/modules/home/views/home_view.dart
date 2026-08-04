@@ -87,7 +87,6 @@ class HomeView extends GetView<HomeController> {
             ],
           ),
         ),
-
         Expanded(
           flex: 9,
           child: PageView.builder(
