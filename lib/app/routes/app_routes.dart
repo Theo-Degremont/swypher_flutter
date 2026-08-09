@@ -9,6 +9,7 @@ abstract class Routes {
   static const LOGIN = _Paths.LOGIN;
   static const UPLOAD_MUSIC = _Paths.UPLOAD_MUSIC;
   static const COMPLETE_MUSIC = _Paths.COMPLETE_MUSIC;
+  static const RECORD_MUSIC = _Paths.RECORD_MUSIC;
 }
 
 abstract class _Paths {
@@ -19,4 +20,5 @@ abstract class _Paths {
   static const LOGIN = '/login';
   static const UPLOAD_MUSIC = '/upload-music';
   static const COMPLETE_MUSIC = '/complete-music';
+  static const RECORD_MUSIC = '/record-music';
 }

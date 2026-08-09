@@ -9,9 +9,7 @@ class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsetsGeometry.only(bottom: 30.h),
-        child: Stack(
+      body:  Stack(
           children: [
             SizedBox(
               width: double.infinity,
@@ -177,12 +175,13 @@ class SplashView extends GetView<SplashController> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 20.h),
                 ],
               ),
             ),
           ],
         ),
-      ),
+      
     );
   }
 }

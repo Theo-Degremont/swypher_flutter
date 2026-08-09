@@ -18,9 +18,9 @@ class UploadMusicView extends GetView<UploadMusicController> {
   Widget build(BuildContext context) {
     return CustomPage(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.only(left: 16.w,right: 16.w, top: 30.h, bottom: 20.h),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Obx(
@@ -29,7 +29,7 @@ class UploadMusicView extends GetView<UploadMusicController> {
                       controller.voiceFile.value != null
                   ? SizedBox.shrink()
                   : Padding(
-                      padding: EdgeInsets.only(top: 30.h, bottom: 10.h),
+                      padding: EdgeInsets.only( bottom: 10.h),
                       child: Text(
                         'Importer vos fichiers',
                         style: TextStyle(
@@ -238,14 +238,14 @@ class UploadMusicView extends GetView<UploadMusicController> {
             ),
 
             Obx(
-              () =>controller.toplineFile.value == null ||
-                      controller.voiceFile.value == null
+              () =>controller.toplineFile.value != null ||
+                      controller.voiceFile.value != null
                   ?  CustomTextButton(
                 text: 'Continuer',
                 onPressed: () => controller.goToCompleteMusic(),
                 borderRadius: 100,
                 height: 60,
-              ) : SizedBox.shrink(),
+              ) : SizedBox(height: 60.h),
             ),
           ],
         ),

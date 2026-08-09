@@ -46,6 +46,12 @@ class UploadMusicController extends GetxController {
   }
 
   void goToCompleteMusic() {
-    Get.toNamed(Routes.COMPLETE_MUSIC);
+    Get.toNamed(
+      Routes.COMPLETE_MUSIC,
+      arguments: {
+        'toplineFile': toplineFile.value,
+        'voiceFile': voiceFile.value,
+      },
+    );
   }
 }

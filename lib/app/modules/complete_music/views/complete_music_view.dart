@@ -412,11 +412,15 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                       ),
                     ),
                   ),
-                  CustomTextButton(
-                    text: 'Poster le son',
-                    onPressed: () => null,
-                    height: 60,
-                    borderRadius: 100,
+                  Obx(
+                    () => CustomTextButton(
+                      text: 'Poster le son',
+                      onPressed: controller.postMusic,
+                      isLoading: controller.isLoading.value,
+                      isEnabled: !controller.isLoading.value,
+                      height: 60,
+                      borderRadius: 100,
+                    ),
                   ),
                 ],
               ),
