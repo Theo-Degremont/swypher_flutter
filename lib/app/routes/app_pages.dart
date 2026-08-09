@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/complete_music/bindings/complete_music_binding.dart';
+import '../modules/complete_music/views/complete_music_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/main/bindings/main_binding.dart';
@@ -51,6 +53,13 @@ class AppPages {
       name: _Paths.UPLOAD_MUSIC,
       page: () => const UploadMusicView(),
       binding: UploadMusicBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.COMPLETE_MUSIC,
+      page: () => const CompleteMusicView(),
+      binding: CompleteMusicBinding(),
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),
     ),

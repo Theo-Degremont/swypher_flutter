@@ -58,7 +58,7 @@ class _CustomNavBarTabState extends State<CustomNavBarTab> {
                   color: color,
                   fontSize: 12.sp,
                   letterSpacing: 0.6,
-                  fontFamily: poppinsFontFamily,
+                  fontFamily: AppFonts.poppins,
                   fontWeight: FontWeight.bold,
                 ),
               ),

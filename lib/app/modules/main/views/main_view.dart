@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/home/views/home_view.dart';
+import 'package:swypher_flutter/app/modules/library/views/library_view.dart';
 import 'package:swypher_flutter/app/modules/profile/views/profile_view.dart';
 import 'package:swypher_flutter/app/modules/music_studio/views/music_studio_view.dart';
 import 'package:swypher_flutter/app/modules/search/views/search_view.dart';
@@ -22,7 +23,7 @@ class MainView extends GetView<MainController> {
                 children: const [
                   HomeView(), // 0
                   SearchView(), // 1
-                  MusicStudioView(), // 2
+                  LibraryView(), // 2
                   ProfileView(), // 3
                   MusicStudioView(), // 4
                 ],

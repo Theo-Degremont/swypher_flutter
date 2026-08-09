@@ -236,10 +236,16 @@ class UploadMusicView extends GetView<UploadMusicController> {
                 ],
               ),
             ),
-            CustomTextButton(
-              text: 'Continuer',
-              onPressed: () {},
-              borderRadius: 100,
+
+            Obx(
+              () =>controller.toplineFile.value == null ||
+                      controller.voiceFile.value == null
+                  ?  CustomTextButton(
+                text: 'Continuer',
+                onPressed: () => controller.goToCompleteMusic(),
+                borderRadius: 100,
+                height: 60,
+              ) : SizedBox.shrink(),
             ),
           ],
         ),

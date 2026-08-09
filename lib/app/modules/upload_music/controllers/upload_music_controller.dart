@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/main/controllers/main_controller.dart';
+import 'package:swypher_flutter/app/routes/app_pages.dart';
 
 class UploadMusicController extends GetxController {
   late final MainController mainController;
@@ -42,5 +43,9 @@ class UploadMusicController extends GetxController {
 
   void removeVoiceFile() {
     voiceFile.value = null;
+  }
+
+  void goToCompleteMusic() {
+    Get.toNamed(Routes.COMPLETE_MUSIC);
   }
 }

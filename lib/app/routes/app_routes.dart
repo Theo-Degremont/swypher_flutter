@@ -8,6 +8,7 @@ abstract class Routes {
   static const REGISTER = _Paths.REGISTER;
   static const LOGIN = _Paths.LOGIN;
   static const UPLOAD_MUSIC = _Paths.UPLOAD_MUSIC;
+  static const COMPLETE_MUSIC = _Paths.COMPLETE_MUSIC;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const REGISTER = '/register';
   static const LOGIN = '/login';
   static const UPLOAD_MUSIC = '/upload-music';
+  static const COMPLETE_MUSIC = '/complete-music';
 }

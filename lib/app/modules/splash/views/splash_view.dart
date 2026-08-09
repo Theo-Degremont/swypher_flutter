@@ -60,7 +60,7 @@ class SplashView extends GetView<SplashController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Image.asset(
-                    'assets/images/logo_swypher.png',
+                    AppImages.logo,
                     width: 200.w,
                     height: 200.h,
                   ),
@@ -68,7 +68,7 @@ class SplashView extends GetView<SplashController> {
                     'Le prochain son commence ici'.toUpperCase(),
                     style: TextStyle(
                       fontSize: 12.sp,
-                      fontFamily: montserratFontFamily,
+                      fontFamily: AppFonts.montserrat,
                       letterSpacing: 1.5,
                       color: AppColors.secondaryTextColor.withValues(
                         alpha: 0.7,
@@ -134,7 +134,7 @@ class SplashView extends GetView<SplashController> {
                         'Initialisation du studio'.toUpperCase(),
                         style: TextStyle(
                           fontSize: 14.sp,
-                          fontFamily: montserratFontFamily,
+                          fontFamily: AppFonts.montserrat,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1,
                           color: AppColors.secondaryTextColor.withValues(
@@ -149,7 +149,7 @@ class SplashView extends GetView<SplashController> {
                             controller.dots.value,
                             style: TextStyle(
                               fontSize: 14.sp,
-                              fontFamily: montserratFontFamily,
+                              fontFamily: AppFonts.montserrat,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
                               color: AppColors.secondaryTextColor.withValues(
@@ -169,7 +169,7 @@ class SplashView extends GetView<SplashController> {
                           : 'Version ${controller.version.value}'.toUpperCase(),
                       style: TextStyle(
                         fontSize: 12.sp,
-                        fontFamily: montserratFontFamily,
+                        fontFamily: AppFonts.montserrat,
                         letterSpacing: 1.5,
                         color: AppColors.secondaryTextColor.withValues(
                           alpha: 0.3,
