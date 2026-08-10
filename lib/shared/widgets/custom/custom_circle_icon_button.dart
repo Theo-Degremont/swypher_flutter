@@ -10,6 +10,7 @@ class CustomCircleIconButton extends StatefulWidget {
     this.size = 60,
     this.colorIcon,
     this.colorBackground,
+    this.iconSize = 40,
   });
 
   final VoidCallback? onPressed;
@@ -17,6 +18,7 @@ class CustomCircleIconButton extends StatefulWidget {
   final double size;
   final Color? colorIcon;
   final Color? colorBackground;
+  final double iconSize;
 
   @override
   State<CustomCircleIconButton> createState() => _CustomCircleIconButtonState();
@@ -56,7 +58,7 @@ class _CustomCircleIconButtonState extends State<CustomCircleIconButton> {
           child: Icon(
             widget.icon,
             color: widget.colorIcon ?? AppColors.secondaryColor,
-            size: 40.w,
+            size: widget.iconSize.w,
           ),
         ),
       ),

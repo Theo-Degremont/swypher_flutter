@@ -7,4 +7,7 @@ class MusicStudioController extends GetxController {
     Get.toNamed(Routes.UPLOAD_MUSIC);
   }
 
+  void goToRecordMusic() {
+    Get.toNamed(Routes.RECORD_MUSIC);
+  }
 }

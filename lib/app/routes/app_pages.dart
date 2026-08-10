@@ -69,6 +69,8 @@ class AppPages {
       name: _Paths.RECORD_MUSIC,
       page: () => const RecordMusicView(),
       binding: RecordMusicBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
     ),
   ];
 }

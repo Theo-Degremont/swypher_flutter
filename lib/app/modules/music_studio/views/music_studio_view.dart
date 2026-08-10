@@ -45,7 +45,7 @@ class MusicStudioView extends GetView<MusicStudioController> {
           icon: Icons.mic_sharp,
           isGradient: true,
           onPressed: () {
-
+            controller.goToRecordMusic();
           },
         ),
         CustomBlocButton(
