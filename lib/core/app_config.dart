@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:swypher_flutter/shared/data/network/api_client.dart';
 import 'package:swypher_flutter/shared/data/network/auth_api.dart';
+import 'package:swypher_flutter/shared/services/audio_service.dart';
 import 'package:swypher_flutter/shared/services/memory_service.dart';
-// import 'package:sifflard_flutter/common/services/audio_service.dart';
 
 Future<void> configureApp() async {
 
@@ -19,7 +19,7 @@ Future<void> configureApp() async {
   Get.put(MemoryService.instance);
   Get.put(ApiClient());
   Get.put(AuthApi());
-  // await AudioService.initialize();
+  await AudioService.initialize();
 
   final supportedLanguages = ['en', 'fr'];
 
