@@ -8,6 +8,7 @@ import 'package:swypher_flutter/shared/widgets/custom/custom_circle_icon_button.
 import 'package:swypher_flutter/shared/widgets/custom/custom_page.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_text_button.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/mic_button_widget.dart';
+import 'package:swypher_flutter/shared/widgets/widgets/progression_bar_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/recording_visualizer_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/topline_swypher_picker_button_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/upload_button_widget.dart';
@@ -78,10 +79,11 @@ class RecordMusicView extends GetView<RecordMusicController> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: (controller.isRecording.value
-                                        ? AppColors.primaryColor
-                                        : AppColors.primaryColor)
-                                    .withValues(alpha: 0.2),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: controller.isRecording.value
+                                      ? 0.4
+                                      : 0.2,
+                                ),
                                 width: 2.w,
                               ),
                             ),
@@ -108,89 +110,19 @@ class RecordMusicView extends GetView<RecordMusicController> {
                           ),
                         ),
 
-                        // ─── Sections visibles uniquement si un enregistrement existe ──
+                        // ─── Sections visibles uniquement si un enregistrement
+                        //     existe ET qu'on n'est PAS en train d'enregistrer ──
                         Obx(
-                          () => controller.recordedVoice.value == null
+                          () => (controller.recordedVoice.value == null ||
+                                  controller.isRecording.value)
                               ? SizedBox.shrink()
                               : Column(
                                   spacing: 10.h,
                                   children: [
                                     // Barre de progression
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        top: 20.h,
-                                        left: 20.w,
-                                        right: 20.w,
-                                      ),
-                                      child: Stack(
-                                        alignment: Alignment.centerLeft,
-                                        children: [
-                                          Container(
-                                            height: 4.h,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  AppColors.whiteColor.withValues(
-                                                alpha: 0.2,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(40.0),
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 4.h,
-                                            width: 100.w,
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  AppColors
-                                                      .primaryLinearGradientStart,
-                                                  AppColors
-                                                      .primaryLinearGradientEnd,
-                                                ],
-                                                begin: Alignment.centerLeft,
-                                                end: Alignment.centerRight,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    // Temps
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 20.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            '0:00',
-                                            style: TextStyle(
-                                              color: AppColors.secondaryTextColor
-                                                  .withValues(alpha: 0.6),
-                                              fontSize: 12.sp,
-                                              letterSpacing: 0.5,
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                          Text(
-                                            '0:00',
-                                            style: TextStyle(
-                                              color: AppColors.secondaryTextColor
-                                                  .withValues(alpha: 0.6),
-                                              fontSize: 12.sp,
-                                              letterSpacing: 0.5,
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                    ProgressionBarWidget(
+                                      position: controller.voicePosition,
+                                      duration: controller.voiceDuration,
                                     ),
 
                                     // Contrôles play / replay / supprimer
@@ -205,20 +137,29 @@ class RecordMusicView extends GetView<RecordMusicController> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          CustomCircleIconButton(
-                                            icon: Icons.play_arrow_outlined,
-                                            onPressed: () {},
-                                            size: 70,
-                                            iconSize: 50,
-                                            colorBackground:
-                                                AppColors.whiteColor.withValues(
-                                              alpha: 0.1,
+                                          // Play / Pause
+                                          Obx(
+                                            () => CustomCircleIconButton(
+                                              icon: controller.isPlayingBack.value
+                                                  ? Icons.pause_rounded
+                                                  : Icons.play_arrow_outlined,
+                                              onPressed:
+                                                  controller.togglePlayback,
+                                              size: 70,
+                                              iconSize: 50,
+                                              colorBackground:
+                                                  AppColors.whiteColor
+                                                      .withValues(alpha: 0.1),
+                                              colorIcon:
+                                                  AppColors.primaryColor,
                                             ),
-                                            colorIcon: AppColors.primaryColor,
                                           ),
+
+                                          // Replay depuis le début
                                           CustomCircleIconButton(
                                             icon: Icons.replay_outlined,
-                                            onPressed: () {},
+                                            onPressed:
+                                                controller.restartPlayback,
                                             size: 70,
                                             iconSize: 50,
                                             colorBackground:
@@ -227,6 +168,8 @@ class RecordMusicView extends GetView<RecordMusicController> {
                                             ),
                                             colorIcon: AppColors.primaryColor,
                                           ),
+
+                                          // Supprimer
                                           GestureDetector(
                                             onTap: controller.deleteRecording,
                                             child: Container(
@@ -258,8 +201,8 @@ class RecordMusicView extends GetView<RecordMusicController> {
                                                   Text(
                                                     'Supprimer'.toUpperCase(),
                                                     style: TextStyle(
-                                                      color:
-                                                          AppColors.tertiaryColor,
+                                                      color: AppColors
+                                                          .tertiaryColor,
                                                       fontSize: 10.sp,
                                                       fontFamily:
                                                           AppFonts.montserrat,
@@ -281,7 +224,7 @@ class RecordMusicView extends GetView<RecordMusicController> {
                     ),
                   ),
 
-                  // ─── Bouton Continuer (visible uniquement si enregistrement) ──
+                  // ─── Bouton Continuer ──────────────────────────────────────
                   Obx(
                     () => controller.recordedVoice.value == null
                         ? SizedBox.shrink()

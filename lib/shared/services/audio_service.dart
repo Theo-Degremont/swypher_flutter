@@ -196,6 +196,21 @@ class AudioService extends GetxService {
     await _tracks[type]!.player.seek(position);
   }
 
+  // ─── Préchargement ───────────────────────────────────────────────────────────
+
+  /// Charge la source sans démarrer la lecture (utile pour récupérer la durée).
+  Future<void> preload(AudioType type, String source) async {
+    final track = _tracks[type]!;
+    track.source = source;
+    await track.player.setSource(_toSource(source));
+  }
+
+  // ─── Événement de fin ────────────────────────────────────────────────────────
+
+  /// Stream émis quand la piste [type] se termine naturellement.
+  Stream<void> onComplete(AudioType type) =>
+      _tracks[type]!.player.onPlayerComplete;
+
   // ─── Privé ───────────────────────────────────────────────────────────────────
 
   Future<void> _pauseOthers(AudioType except) async {
