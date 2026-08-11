@@ -220,7 +220,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                                   child: Obx(
                                     () => GestureDetector(
                                       onTap: () =>
-                                          controller.updateStatus('public'),
+                                          controller.updateStatus('published'),
                                       child: Container(
                                         alignment: Alignment.center,
                                         padding: EdgeInsets.all(8.w),
@@ -228,12 +228,12 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                                           gradient: LinearGradient(
                                             colors: [
                                               controller.status.value ==
-                                                      'public'
+                                                      'published'
                                                   ? AppColors
                                                         .primaryLinearGradientStart
                                                   : Colors.transparent,
                                               controller.status.value ==
-                                                      'public'
+                                                      'published'
                                                   ? AppColors
                                                         .primaryLinearGradientEnd
                                                   : Colors.transparent,
@@ -250,7 +250,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                                           style: TextStyle(
                                             color:
                                                 controller.status.value ==
-                                                    'public'
+                                                    'published'
                                                 ? AppColors.secondaryColor
                                                 : AppColors.primaryTextColor,
                                             fontSize: 14.sp,

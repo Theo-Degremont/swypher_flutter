@@ -43,7 +43,7 @@ class CompleteMusicController extends GetxController {
   StreamSubscription<void>? _voiceCompleteSub;
 
   // ─── Status & loading ────────────────────────────────────────────────────────
-  final RxString status    = 'public'.obs;
+  final RxString status    = 'published'.obs;
   final isLoading          = false.obs;
 
   @override

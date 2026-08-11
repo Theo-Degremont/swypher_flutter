@@ -7,6 +7,7 @@ import 'package:swypher_flutter/shared/widgets/custom/custom_circle_icon_button.
 import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_page.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_text_button.dart';
+import 'package:swypher_flutter/shared/widgets/widgets/progression_bar_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/topline_swypher_picker_button_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/upload_button_widget.dart';
 
@@ -70,77 +71,14 @@ class UploadMusicView extends GetView<UploadMusicController> {
                   ? Padding(
                       padding: EdgeInsets.only(
                         top: 30.h,
-                        bottom: 8.h,
                         left: 10.w,
                         right: 10.w,
                       ),
-                      child: Stack(
-                        alignment: Alignment.centerLeft,
-                        children: [
-                          Container(
-                            height: 4.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor.withValues(
-                                alpha: 0.2,
-                              ),
-                              borderRadius: BorderRadius.circular(40.0),
-                            ),
-                          ),
-                          Container(
-                            height: 4.h,
-                            width: 100.w,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  AppColors.primaryLinearGradientStart,
-                                  AppColors.primaryLinearGradientEnd,
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : SizedBox.shrink(),
-            ),
-
-            Obx(
-              () =>
-                  controller.toplineFile.value != null ||
-                      controller.voiceFile.value != null
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '0:00',
-                            style: TextStyle(
-                              color: AppColors.secondaryTextColor.withValues(
-                                alpha: 0.6,
-                              ),
-                              fontSize: 12.sp,
-                              letterSpacing: 0.5,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                          Text(
-                            '0:00',
-                            style: TextStyle(
-                              color: AppColors.secondaryTextColor.withValues(
-                                alpha: 0.6,
-                              ),
-                              fontSize: 12.sp,
-                              letterSpacing: 0.5,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
+                      child: Obx(
+                        () => ProgressionBarWidget(
+                          position: controller.playbackPosition,
+                          duration: controller.playbackDuration,
+                        ),
                       ),
                     )
                   : SizedBox.shrink(),
@@ -157,14 +95,17 @@ class UploadMusicView extends GetView<UploadMusicController> {
                         mainAxisSize: MainAxisSize.min,
                         spacing: 50.w,
                         children: [
-                          CustomCircleIconButton(
-                            icon: Icons.play_arrow_outlined,
-                            onPressed: () {},
+                          Obx(
+                            () => CustomCircleIconButton(
+                              icon: controller.isPlayingBack.value
+                                  ? Icons.pause_rounded
+                                  : Icons.play_arrow_outlined,
+                              onPressed: controller.togglePlayback,
+                            ),
                           ),
-
                           CustomCircleIconButton(
                             icon: Icons.replay_outlined,
-                            onPressed: () {},
+                            onPressed: controller.restartPlayback,
                             colorBackground: AppColors.whiteColor.withValues(
                               alpha: 0.1,
                             ),

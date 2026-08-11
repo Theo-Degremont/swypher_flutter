@@ -20,8 +20,7 @@ class CompleteMusicService extends GetxService {
   }) =>
       _musicApi.postMusic(
         title: title,
-        // 'public' côté app → 'published' côté API
-        status: status == 'public' ? 'published' : status,
+        status: status,
         topline: topline,
         voice: voice,
         coverImage: coverImage,
