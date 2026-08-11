@@ -9,10 +9,13 @@ import 'package:swypher_flutter/app/modules/main/controllers/main_controller.dar
 import 'package:swypher_flutter/app/routes/app_pages.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
+import 'package:swypher_flutter/shared/services/headphone_service.dart';
+import 'package:swypher_flutter/shared/widgets/modals/headphone_modal.dart';
 
 class RecordMusicController extends GetxController {
   late final MainController mainController;
   late final AudioService _audio;
+  late final HeadphoneService _headphones;
 
   // ─── Fichiers ────────────────────────────────────────────────────────────────
   final Rx<PlatformFile?> toplineFile   = Rx<PlatformFile?>(null);
@@ -47,7 +50,15 @@ class RecordMusicController extends GetxController {
     super.onInit();
     mainController = Get.find<MainController>();
     _audio         = Get.find<AudioService>();
+    _headphones    = Get.find<HeadphoneService>();
     _recorder      = AudioRecorder();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    HeadphoneModal.show();
+    _headphones.refresh();
   }
 
   // ─── Topline ──────────────────────────────────────────────────────────────────
@@ -86,9 +97,17 @@ class RecordMusicController extends GetxController {
   Future<void> toggleRecording() async {
     if (isRecording.value) {
       await _finalizeRecording();
-    } else {
-      await _startRecording();
+      return;
     }
+
+    // Vérifie la présence d'écouteurs avant de lancer l'enregistrement.
+    await _headphones.refresh();
+    if (!_headphones.isHeadphoneConnected.value) {
+      HeadphoneModal.show();
+      return;
+    }
+
+    await _startRecording();
   }
 
   // ─── Démarrage ───────────────────────────────────────────────────────────────
@@ -106,22 +125,33 @@ class RecordMusicController extends GetxController {
       return;
     }
 
+    // Rafraîchit l'état des écouteurs juste avant de démarrer.
+    await _headphones.refresh();
+
+    // Tente de sélectionner le micro intégré du téléphone en priorité,
+    // même si des écouteurs avec micro sont connectés.
+    final builtInMic = await _headphones.findBuiltInMic();
+
     _currentRecordingPath =
         '${Directory.systemTemp.path}/voice_${DateTime.now().millisecondsSinceEpoch}.m4a';
 
     await _recorder.start(
-      const RecordConfig(
-        encoder:    AudioEncoder.aacLc,
-        bitRate:    128000,
-        sampleRate: 44100,
+      RecordConfig(
+        encoder:     AudioEncoder.aacLc,
+        bitRate:     128000,
+        sampleRate:  44100,
         numChannels: 1,
+        // Si un micro intégré est trouvé, on l'utilise explicitement.
+        // Null = le package utilise le défaut du système.
+        device: builtInMic,
       ),
       path: _currentRecordingPath!,
     );
 
-    // Topline d'enregistrement (écoute pendant la prise).
+    // Topline de référence pendant la prise — uniquement si écouteurs connectés.
+    // Sans écouteurs, la topline n'est pas jouée pour éviter tout bleeding.
     final toplinePath = toplineFile.value?.path;
-    if (toplinePath != null) {
+    if (toplinePath != null && _headphones.isHeadphoneConnected.value) {
       await _audio.play(AudioType.record, toplinePath);
     }
 
@@ -213,7 +243,10 @@ class RecordMusicController extends GetxController {
 
     await _audio.play(AudioType.voice, voicePath);
     if (toplineFile.value?.path != null) {
-      await _audio.play(AudioType.topline, toplineFile.value!.path!);
+      // Toujours à plein volume pendant l'écoute, indépendamment de l'état
+      // des écouteurs (le ducking ne s'applique qu'à AudioType.record
+      // pendant l'enregistrement).
+      await _audio.play(AudioType.topline, toplineFile.value!.path!, volume: 1.0);
     }
 
     _playbackStarted    = true;

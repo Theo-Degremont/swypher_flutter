@@ -95,17 +95,20 @@ class AudioService extends GetxService {
 
     final track = _tracks[type]!;
 
-    if (volume != null) {
-      final clamped = volume.clamp(0.0, 1.0);
-      await track.player.setVolume(clamped);
-      track.volume.value = clamped;
-    }
+    // Calcule le volume cible : paramètre explicite ou valeur courante de la piste.
+    final targetVolume = volume != null
+        ? volume.clamp(0.0, 1.0)
+        : track.volume.value;
+
+    if (volume != null) track.volume.value = targetVolume;
 
     track.source = source;
     track.savedPosition = Duration.zero;
 
     final src = _toSource(source);
-    await track.player.play(src);
+    // Passe le volume directement à play() — plus fiable que setVolume() + play()
+    // car audioplayers peut réinitialiser son état interne lors du chargement.
+    await track.player.play(src, volume: targetVolume);
   }
 
   // ─── Pause ───────────────────────────────────────────────────────────────────
