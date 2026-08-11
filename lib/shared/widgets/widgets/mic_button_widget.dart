@@ -3,9 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
 
 class MicButtonWidget extends StatefulWidget {
-  const MicButtonWidget({super.key, this.onPressed});
+  const MicButtonWidget({
+    super.key,
+    this.onPressed,
+    this.size = 60,
+    this.iconSize = 30,
+    this.isRecording = false,
+  });
 
   final VoidCallback? onPressed;
+  final double size;
+  final double iconSize;
+  final bool isRecording;
 
   @override
   State<MicButtonWidget> createState() => _MicButtonWidgetState();
@@ -28,8 +37,8 @@ class _MicButtonWidgetState extends State<MicButtonWidget> {
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeInOut,
         child: Container(
-          width: 60.w,
-          height: 60.w,
+          width: widget.size.w,
+          height: widget.size.w,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
@@ -48,7 +57,15 @@ class _MicButtonWidgetState extends State<MicButtonWidget> {
               ),
             ],
           ),
-          child: Icon(Icons.mic_sharp, color: AppColors.secondaryColor, size: 30.w),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Icon(
+              widget.isRecording ? Icons.stop_rounded : Icons.mic_sharp,
+              key: ValueKey(widget.isRecording),
+              color: AppColors.secondaryColor,
+              size: widget.iconSize.w,
+            ),
+          ),
         ),
       ),
     );

@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
 import '../controllers/library_controller.dart';
 
-class LibraryBody extends GetView<LibraryController> {
-  const LibraryBody({super.key});
+class LibraryView extends GetView<LibraryController> {
+  const LibraryView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -20,6 +20,11 @@ class CustomField extends StatelessWidget {
     this.obscureText = false,
     this.showEyeIcon = false,
     this.onTapEye,
+    this.fontFamilyLabel = AppFonts.montserrat,
+    this.textColorLabel,
+    this.fontSizeLabel = 12.0,
+    this.fontWeightLabel = FontWeight.bold,
+    this.isExpandable = false,
   });
 
   final FocusNode focusNode;
@@ -37,9 +42,131 @@ class CustomField extends StatelessWidget {
   final bool obscureText;
   final bool showEyeIcon;
   final VoidCallback? onTapEye;
+  final String fontFamilyLabel;
+  final Color? textColorLabel;
+  final double fontSizeLabel;
+  final FontWeight fontWeightLabel;
+  final bool isExpandable;
+
+  Widget _buildTextField(bool isFocused) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      textInputAction: isExpandable ? TextInputAction.newline : textInputAction,
+      onSubmitted: (_) => onSubmitted?.call(),
+      focusNode: focusNode,
+      maxLines: isExpandable ? null : 1,
+      style: TextStyle(
+        fontSize: 14.sp,
+        color: AppColors.secondaryTextColor,
+        letterSpacing: 0.5,
+        fontFamily: 'Montserrat',
+        fontWeight: FontWeight.normal,
+      ),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: AppColors.backgroundColor,
+        hintText: hintText,
+        hintStyle: TextStyle(
+          fontSize: 14.sp,
+          color: AppColors.secondaryTextColor.withValues(alpha: 0.3),
+          letterSpacing: 0.5,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.normal,
+        ),
+        suffixIcon: showEyeIcon
+            ? IconButton(
+                icon: obscureText
+                    ? Icon(Icons.visibility_outlined)
+                    : Icon(Icons.visibility_off_outlined),
+                color: isFocused
+                    ? AppColors.primaryColor
+                    : AppColors.secondaryTextColor.withValues(alpha: 0.3),
+                onPressed: onTapEye,
+              )
+            : null,
+        prefixIcon: prefixIcon != null
+            ? Icon(
+                prefixIcon,
+                color: isFocused
+                    ? AppColors.primaryColor
+                    : AppColors.secondaryTextColor.withValues(alpha: 0.3),
+              )
+            : null,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColors.whiteColor.withValues(alpha: 0.1),
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColors.primaryColor,
+            width: 1,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final label = Padding(
+      padding: EdgeInsets.only(left: 8.w),
+      child: Text(
+        labelText,
+        style: TextStyle(
+          fontSize: fontSizeLabel.sp,
+          color: textColorLabel ?? AppColors.secondaryTextColor,
+          letterSpacing: 0.5,
+          fontFamily: fontFamilyLabel,
+          fontWeight: fontWeightLabel,
+        ),
+      ),
+    );
+
+    final error = Padding(
+      padding: EdgeInsets.only(left: 8.w),
+      child: Text(
+        errorText ?? 'none',
+        style: TextStyle(
+          fontSize: 12.sp,
+          color: errorText != null ? AppColors.primaryColor : Colors.transparent,
+          letterSpacing: 0.5,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+
+    if (isExpandable) {
+      return Container(
+        margin: EdgeInsets.only(bottom: marginBottom.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            label,
+            SizedBox(height: 8.h),
+            ValueListenableBuilder<bool>(
+              valueListenable: isFocused,
+              builder: (context, focused, _) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: 240.h),
+                  child: _buildTextField(focused),
+                );
+              },
+            ),
+            SizedBox(height: 4.h),
+            error,
+          ],
+        ),
+      );
+    }
+
     return Container(
       margin: EdgeInsets.only(bottom: marginBottom.h),
       height: height.h,
@@ -47,103 +174,12 @@ class CustomField extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(left: 8.w),
-            child: Text(
-              labelText,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.secondaryTextColor,
-                letterSpacing: 0.5,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          label,
           ValueListenableBuilder<bool>(
             valueListenable: isFocused,
-            builder: (context, isFocused, _) {
-              return TextField(
-                controller: controller,
-                obscureText: obscureText,
-                keyboardType: keyboardType,
-                textInputAction: textInputAction,
-                onSubmitted: (_) => onSubmitted?.call(),
-                focusNode: focusNode,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.secondaryTextColor,
-                  letterSpacing: 0.5,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.normal,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.backgroundColor,
-                  hintText: hintText,
-                  hintStyle: TextStyle(
-                    fontSize: 14.sp,
-                    color: AppColors.secondaryTextColor.withValues(alpha: 0.3),
-                    letterSpacing: 0.5,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.normal,
-                  ),
-                  suffixIcon: showEyeIcon
-                      ? IconButton(
-                          icon: obscureText
-                              ? Icon(Icons.visibility_outlined)
-                              : Icon(Icons.visibility_off_outlined),
-                          color: isFocused
-                              ? AppColors.primaryColor
-                              : AppColors.secondaryTextColor.withValues(
-                                  alpha: 0.3,
-                                ),
-                          onPressed: onTapEye,
-                        )
-                      : null,
-                  prefixIcon: prefixIcon != null
-                      ? Icon(
-                          prefixIcon,
-                          color: isFocused
-                              ? AppColors.primaryColor
-                              : AppColors.secondaryTextColor.withValues(
-                                  alpha: 0.3,
-                                ),
-                        )
-                      : null,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: AppColors.whiteColor.withValues(alpha: 0.1),
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: AppColors.primaryColor,
-                      width: 1,
-                    ),
-                  ),
-                ),
-              );
-            },
+            builder: (context, focused, _) => _buildTextField(focused),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 8.w),
-            child: Text(
-              errorText ?? 'none',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: errorText != null
-                    ? AppColors.primaryColor
-                    : Colors.transparent,
-                letterSpacing: 0.5,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          error,
         ],
       ),
     );

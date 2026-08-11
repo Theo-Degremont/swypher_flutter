@@ -43,10 +43,16 @@
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
 					<key>UISceneStoryboardFile</key>
 					<string>Main</string>
-				</dict>
+					<key>NSMicrophoneUsageDescription</key>
+	<string>Swypher a besoin de votre microphone pour enregistrer votre voix.</string>
+</dict>
 			</array>
-		</dict>
-	</dict>
+			<key>NSMicrophoneUsageDescription</key>
+	<string>Swypher a besoin de votre microphone pour enregistrer votre voix.</string>
+</dict>
+		<key>NSMicrophoneUsageDescription</key>
+	<string>Swypher a besoin de votre microphone pour enregistrer votre voix.</string>
+</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -66,5 +72,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Swypher a besoin de votre microphone pour enregistrer votre voix.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Swypher a besoin d'accéder à votre galerie pour choisir une image de couverture.</string>
 </dict>
 </plist>

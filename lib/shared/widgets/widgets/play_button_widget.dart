@@ -3,9 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
 
 class PlayButtonWidget extends StatefulWidget {
-  const PlayButtonWidget({super.key, this.onPressed});
+  const PlayButtonWidget({
+    super.key,
+    this.onPressed,
+    this.size = 70.0,
+    this.iconSize = 40.0,
+    this.isPlaying = false,
+  });
 
   final VoidCallback? onPressed;
+  final double size;
+  final double iconSize;
+  final bool isPlaying;
 
   @override
   State<PlayButtonWidget> createState() => _PlayButtonWidgetState();
@@ -28,8 +37,8 @@ class _PlayButtonWidgetState extends State<PlayButtonWidget> {
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeInOut,
         child: Container(
-          width: 70.w,
-          height: 70.w,
+          width: widget.size.w,
+          height: widget.size.w,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
@@ -41,10 +50,14 @@ class _PlayButtonWidgetState extends State<PlayButtonWidget> {
               end: Alignment.bottomRight,
             ),
           ),
-          child: Icon(
-            Icons.play_arrow_sharp,
-            color: AppColors.secondaryColor,
-            size: 40.w,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Icon(
+              widget.isPlaying ? Icons.pause_rounded : Icons.play_arrow_sharp,
+              key: ValueKey(widget.isPlaying),
+              color: AppColors.secondaryColor,
+              size: widget.iconSize.w,
+            ),
           ),
         ),
       ),
