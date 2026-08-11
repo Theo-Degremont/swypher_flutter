@@ -58,7 +58,7 @@ class RecordMusicView extends GetView<RecordMusicController> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       spacing: 10.h,
                       children: [
-                        // Visualiseur — visible pendant l'enregistrement ET entre les pauses
+                        // Visualiseur — visible pendant l'enregistrement ET quand des barres existent
                         Obx(
                           () => AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),

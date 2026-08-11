@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/constants/constants.dart';
 
 /// Barre de progression audio non interactive.
 ///
@@ -12,6 +12,7 @@ class ProgressionBarWidget extends StatelessWidget {
     super.key,
     required this.position,
     required this.duration,
+    this.infoInTop = false,
   });
 
   /// Position courante (réactive).
@@ -19,6 +20,7 @@ class ProgressionBarWidget extends StatelessWidget {
 
   /// Durée totale (réactive).
   final Rx<Duration> duration;
+  final bool infoInTop;
 
   String _format(Duration d) {
     final m = d.inMinutes.remainder(60).toString();
@@ -36,7 +38,35 @@ class ProgressionBarWidget extends StatelessWidget {
           : 0.0;
 
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 10.h,
         children: [
+          if (infoInTop)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Aperçu du mix',
+                style: TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: AppFonts.montserrat,
+                ),
+              ),
+              Text(
+                '${_format(pos)} / ${_format(dur)}',
+                style: TextStyle(
+                  color: AppColors.secondaryTextColor,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: AppFonts.montserrat,
+                ),
+              ),
+            ],
+          ),
           // ── Barre ────────────────────────────────────────────────────────────
           Padding(
             padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
@@ -78,35 +108,40 @@ class ProgressionBarWidget extends StatelessWidget {
             ),
           ),
 
-          // ── Temps ────────────────────────────────────────────────────────────
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _format(pos),
-                  style: TextStyle(
-                    color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
-                    fontSize: 12.sp,
-                    letterSpacing: 0.5,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.normal,
+          if (!infoInTop)
+            // ── Temps ────────────────────────────────────────────────────────────
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _format(pos),
+                    style: TextStyle(
+                      color: AppColors.secondaryTextColor.withValues(
+                        alpha: 0.6,
+                      ),
+                      fontSize: 12.sp,
+                      letterSpacing: 0.5,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
-                ),
-                Text(
-                  _format(dur),
-                  style: TextStyle(
-                    color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
-                    fontSize: 12.sp,
-                    letterSpacing: 0.5,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.normal,
+                  Text(
+                    _format(dur),
+                    style: TextStyle(
+                      color: AppColors.secondaryTextColor.withValues(
+                        alpha: 0.6,
+                      ),
+                      fontSize: 12.sp,
+                      letterSpacing: 0.5,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
         ],
       );
     });

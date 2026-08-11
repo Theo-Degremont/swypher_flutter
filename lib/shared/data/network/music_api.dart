@@ -17,11 +17,15 @@ class MusicApi extends GetxService {
     PlatformFile? topline,
     PlatformFile? voice,
     File? coverImage,
+    double voiceVolume = 0.5,
+    double musicVolume = 0.5,
   }) async {
     final fields = <String, dynamic>{
       'title': title,
       'status': status,
       'requestLanguage': 'fr',
+      'voiceVolume': voiceVolume.toStringAsFixed(2),
+      'musicVolume': musicVolume.toStringAsFixed(2),
     };
 
     if (topline?.path != null) {

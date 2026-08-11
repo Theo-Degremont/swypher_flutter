@@ -1,15 +1,19 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/complete_music/services/complete_music_service.dart';
 import 'package:swypher_flutter/app/modules/main/controllers/main_controller.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/services/audio_service.dart';
 
 class CompleteMusicController extends GetxController {
   late final MainController mainController;
   late final CompleteMusicService _service;
+  late final AudioService _audio;
 
   // ─── Fichiers audio reçus depuis UploadMusicView ─────────────────────────────
   PlatformFile? toplineFile;
@@ -33,6 +37,11 @@ class CompleteMusicController extends GetxController {
   final voiceVolume = 0.5.obs;
   final musicVolume = 0.5.obs;
 
+  // ─── Lecture aperçu ──────────────────────────────────────────────────────────
+  final isPlayingBack  = false.obs;
+  bool _playbackStarted = false;
+  StreamSubscription<void>? _voiceCompleteSub;
+
   // ─── Status & loading ────────────────────────────────────────────────────────
   final RxString status    = 'public'.obs;
   final isLoading          = false.obs;
@@ -42,6 +51,7 @@ class CompleteMusicController extends GetxController {
     super.onInit();
     mainController = Get.find<MainController>();
     _service       = Get.find<CompleteMusicService>();
+    _audio         = Get.find<AudioService>();
 
     // Récupération des fichiers passés depuis UploadMusicView
     final args = Get.arguments as Map<String, dynamic>?;
@@ -54,17 +64,66 @@ class CompleteMusicController extends GetxController {
     speakingFocusNode.addListener(() {
       speakingIsFocused.value = speakingFocusNode.hasFocus;
     });
+
+    // Synchronise les sliders avec l'AudioService en temps réel.
+    // Le changement de slider est immédiatement appliqué même pendant la lecture.
+    ever(voiceVolume, (double v) => _audio.setVolume(AudioType.voice, v));
+    ever(musicVolume, (double v) => _audio.setVolume(AudioType.topline, v));
   }
+
+  // ─── Lecture aperçu (voice + topline) ────────────────────────────────────────
+
+  Future<void> togglePlayback() async {
+    if (isPlayingBack.value) {
+      await _audio.pause(AudioType.voice);
+      if (toplineFile != null) await _audio.pause(AudioType.topline);
+      isPlayingBack.value = false;
+    } else {
+      if (!_playbackStarted) {
+        await _startPlayback();
+      } else {
+        await _audio.resume(AudioType.voice);
+        if (toplineFile?.path != null) await _audio.resume(AudioType.topline);
+        isPlayingBack.value = true;
+      }
+    }
+  }
+
+  Future<void> _startPlayback() async {
+    final voicePath = voiceFile?.path;
+    if (voicePath == null) return;
+
+    // Applique les volumes des sliders dès le démarrage de la lecture.
+    await _audio.play(AudioType.voice, voicePath, volume: voiceVolume.value);
+    if (toplineFile?.path != null) {
+      await _audio.play(AudioType.topline, toplineFile!.path!, volume: musicVolume.value);
+    }
+
+    _playbackStarted = true;
+    isPlayingBack.value = true;
+
+    _voiceCompleteSub?.cancel();
+    _voiceCompleteSub = _audio.onComplete(AudioType.voice).listen((_) async {
+      await _audio.stop(AudioType.topline);
+      isPlayingBack.value = false;
+      _playbackStarted = false;
+    });
+  }
+
+  Rx<Duration> get voicePosition => _audio.positionRx(AudioType.voice);
+  Rx<Duration> get voiceDuration  => _audio.durationRx(AudioType.voice);
+
+  // ─────────────────────────────────────────────────────────────────────────────
 
   void updateStatus(String newStatus) => status.value = newStatus;
 
   Future<void> pickCoverImage() async {
-    final result = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png'],
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
     );
-    if (result != null && result.files.single.path != null) {
-      coverImage.value = File(result.files.single.path!);
+    if (picked != null) {
+      coverImage.value = File(picked.path);
     }
   }
 
@@ -83,6 +142,8 @@ class CompleteMusicController extends GetxController {
         topline: toplineFile,
         voice: voiceFile,
         coverImage: coverImage.value,
+        voiceVolume: voiceVolume.value,
+        musicVolume: musicVolume.value,
       );
 
       if (response.isSuccess) {
@@ -112,7 +173,10 @@ class CompleteMusicController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void onClose() async {
+    _voiceCompleteSub?.cancel();
+    await _audio.stop(AudioType.voice);
+    await _audio.stop(AudioType.topline);
     titleMusicFocusNode.dispose();
     speakingFocusNode.dispose();
     titleMusicIsFocused.dispose();

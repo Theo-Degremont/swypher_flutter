@@ -8,6 +8,7 @@ import 'package:swypher_flutter/shared/widgets/custom/custom_page.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_text_button.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/image_cover_button.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/play_button_widget.dart';
+import 'package:swypher_flutter/shared/widgets/widgets/progression_bar_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/slider_widget.dart';
 
 import '../controllers/complete_music_controller.dart';
@@ -47,73 +48,19 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       spacing: 15.w,
                       children: [
-                        PlayButtonWidget(
-                          size: 55.0,
-                          iconSize: 35.0,
-                          onPressed: () {},
+                        Obx(
+                          () => PlayButtonWidget(
+                            size: 55.0,
+                            iconSize: 35.0,
+                            isPlaying: controller.isPlayingBack.value,
+                            onPressed: controller.togglePlayback,
+                          ),
                         ),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 10.h,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Aperçu du mix',
-                                    style: TextStyle(
-                                      color: AppColors.primaryColor,
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: AppFonts.montserrat,
-                                    ),
-                                  ),
-                                  Text(
-                                    '0:45 / 2:30',
-                                    style: TextStyle(
-                                      color: AppColors.secondaryTextColor,
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: AppFonts.montserrat,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Stack(
-                                alignment: Alignment.centerLeft,
-                                children: [
-                                  Container(
-                                    height: 4.h,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.whiteColor.withValues(
-                                        alpha: 0.2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(40.0),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 4.h,
-                                    width: 100.w,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColors.primaryLinearGradientStart,
-                                          AppColors.primaryLinearGradientEnd,
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(50.0),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          child: ProgressionBarWidget(
+                            position: controller.voicePosition,
+                            duration: controller.voiceDuration,
+                            infoInTop: true,
                           ),
                         ),
                       ],

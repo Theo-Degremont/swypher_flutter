@@ -15,6 +15,8 @@ class CompleteMusicService extends GetxService {
     PlatformFile? topline,
     PlatformFile? voice,
     File? coverImage,
+    double voiceVolume = 0.5,
+    double musicVolume = 0.5,
   }) =>
       _musicApi.postMusic(
         title: title,
@@ -23,5 +25,7 @@ class CompleteMusicService extends GetxService {
         topline: topline,
         voice: voice,
         coverImage: coverImage,
+        voiceVolume: voiceVolume,
+        musicVolume: musicVolume,
       );
 }
