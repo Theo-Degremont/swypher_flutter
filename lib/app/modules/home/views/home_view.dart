@@ -12,6 +12,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // ─── Tabs ────────────────────────────────────────────────────────────
         Expanded(
           flex: 1,
           child: Row(
@@ -87,22 +88,28 @@ class HomeView extends GetView<HomeController> {
             ],
           ),
         ),
+
+        // ─── Feed ────────────────────────────────────────────────────────────
         Expanded(
           flex: 9,
-          child: PageView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return MusicCardWidget(
-                id: index,
-                songTitle: 'Song Title ${index + 1}',
-                artistName: 'Artist Name',
-                prodArtistName: 'Prod.Artist Name',
-                timeStamp: '1:30',
-                totalTime: '3:45',
-              );
-            },
-          ),
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (controller.musicList.isEmpty) {
+              return const SizedBox.shrink();
+            }
+            return PageView.builder(
+              controller: controller.pageController,
+              scrollDirection: Axis.vertical,
+              itemCount: controller.musicList.length,
+              onPageChanged: controller.onPageChanged,
+              itemBuilder: (context, index) {
+                final music = controller.musicList[index];
+                return MusicCardWidget(music: music);
+              },
+            );
+          }),
         ),
       ],
     );

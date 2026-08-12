@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:swypher_flutter/app/modules/home/controllers/home_controller.dart';
 import 'package:swypher_flutter/shared/constants/constants.dart';
+import 'package:swypher_flutter/shared/data/models/music_model.dart';
+import 'package:swypher_flutter/shared/services/audio_service.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/play_button_widget.dart';
+import 'package:swypher_flutter/shared/widgets/widgets/progression_bar_widget.dart';
 
 class MusicCardWidget extends StatelessWidget {
-  const MusicCardWidget({
-    super.key,
-    required this.songTitle,
-    required this.artistName,
-    required this.prodArtistName,
-    this.imageMusic,
-    required this.timeStamp,
-    required this.totalTime,
-    required this.id,
-  });
+  const MusicCardWidget({super.key, required this.music});
 
-  final String songTitle;
-  final String artistName;
-  final String prodArtistName;
-  final String? imageMusic;
-  final String timeStamp;
-  final String totalTime;
-  final int id;
+  final MusicModel music;
 
   @override
   Widget build(BuildContext context) {
+    final audio = AudioService.to;
+    final homeCtrl = Get.find<HomeController>();
+
     return Container(
       margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 35.h),
-
       height: 560.h,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -41,6 +33,7 @@ class MusicCardWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // ─── Pochette ───────────────────────────────────────────────────────
           Container(
             width: 280.w,
             height: 280.w,
@@ -53,12 +46,12 @@ class MusicCardWidget extends StatelessWidget {
                 ),
               ],
               gradient: RadialGradient(
-                stops: [0.0, 1.0],
-                colors: [Color(0xFF0A0A0A), AppColors.blackColor],
+                stops: const [0.0, 1.0],
+                colors: [const Color(0xFF0A0A0A), AppColors.blackColor],
                 center: Alignment.center,
               ),
               shape: BoxShape.circle,
-              border: Border.all(color: Color(0xFF31253E), width: 5.0),
+              border: Border.all(color: const Color(0xFF31253E), width: 5.0),
             ),
             child: Container(
               margin: EdgeInsets.all(5.w),
@@ -69,7 +62,6 @@ class MusicCardWidget extends StatelessWidget {
                   width: 1.0,
                 ),
               ),
-
               child: Container(
                 margin: EdgeInsets.all(5.w),
                 decoration: BoxDecoration(
@@ -120,9 +112,7 @@ class MusicCardWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppColors.whiteColor.withValues(
-                                alpha: 0.1,
-                              ),
+                              color: AppColors.whiteColor.withValues(alpha: 0.1),
                               width: 1.0,
                             ),
                           ),
@@ -131,9 +121,7 @@ class MusicCardWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: AppColors.whiteColor.withValues(
-                                  alpha: 0.1,
-                                ),
+                                color: AppColors.whiteColor.withValues(alpha: 0.1),
                                 width: 1.0,
                               ),
                             ),
@@ -142,9 +130,7 @@ class MusicCardWidget extends StatelessWidget {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: AppColors.whiteColor.withValues(
-                                    alpha: 0.1,
-                                  ),
+                                  color: AppColors.whiteColor.withValues(alpha: 0.1),
                                   width: 1.0,
                                 ),
                               ),
@@ -153,9 +139,7 @@ class MusicCardWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: AppColors.whiteColor.withValues(
-                                      alpha: 0.1,
-                                    ),
+                                    color: AppColors.whiteColor.withValues(alpha: 0.1),
                                     width: 1.0,
                                   ),
                                 ),
@@ -163,42 +147,17 @@ class MusicCardWidget extends StatelessWidget {
                                   margin: EdgeInsets.all(5.w),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        AppColors.primaryLinearGradientStart,
+                                        AppColors.primaryLinearGradientEnd,
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
                                     border: Border.all(
-                                      color: AppColors.whiteColor.withValues(
-                                        alpha: 0.1,
-                                      ),
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Container(
-                                    margin: EdgeInsets.all(5.w),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.whiteColor.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    child: Container(
-                                      margin: EdgeInsets.all(5.w),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            AppColors
-                                                .primaryLinearGradientStart,
-                                            AppColors.primaryLinearGradientEnd,
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        border: Border.all(
-                                          color: Color(0xFF31253E),
-                                          width: 5.0,
-                                        ),
-                                      ),
+                                      color: const Color(0xFF31253E),
+                                      width: 5.0,
                                     ),
                                   ),
                                 ),
@@ -213,9 +172,12 @@ class MusicCardWidget extends StatelessWidget {
               ),
             ),
           ),
+
           SizedBox(height: 16.h),
+
+          // ─── Titre ─────────────────────────────────────────────────────────
           Text(
-            songTitle,
+            music.title,
             style: TextStyle(
               color: AppColors.primaryTextColor,
               fontSize: 24.sp,
@@ -224,12 +186,15 @@ class MusicCardWidget extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+
           SizedBox(height: 8.h),
+
+          // ─── Artiste ───────────────────────────────────────────────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                artistName,
+                music.beatmakerName ?? 'Artiste',
                 style: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 14.sp,
@@ -249,7 +214,7 @@ class MusicCardWidget extends StatelessWidget {
               ),
               SizedBox(width: 5.w),
               Text(
-                prodArtistName,
+                'Prod. ${music.beatmakerName ?? 'Artiste'}',
                 style: TextStyle(
                   color: AppColors.secondaryTextColor,
                   fontSize: 14.sp,
@@ -260,67 +225,18 @@ class MusicCardWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 32.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                Container(
-                  height: 4.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.whiteColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(40.0),
-                  ),
-                ),
-                Container(
-                  height: 4.h,
-                  width: 100.w,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primaryLinearGradientStart,
-                        AppColors.primaryLinearGradientEnd,
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  timeStamp,
-                  style: TextStyle(
-                    color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
-                    fontSize: 12.sp,
-                    letterSpacing: 0.5,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Text(
-                  totalTime,
-                  style: TextStyle(
-                    color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
-                    fontSize: 12.sp,
-                    letterSpacing: 0.5,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-          ),
+
           SizedBox(height: 16.h),
+
+          // ─── Barre de progression ───────────────────────────────────────────
+          ProgressionBarWidget(
+            position: audio.positionRx(AudioType.music),
+            duration: audio.durationRx(AudioType.music),
+          ),
+
+          SizedBox(height: 16.h),
+
+          // ─── Boutons ────────────────────────────────────────────────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -334,7 +250,10 @@ class MusicCardWidget extends StatelessWidget {
                 icon: Icons.favorite_border_sharp,
                 iconColor: AppColors.secondaryTextColor,
               ),
-              PlayButtonWidget(onPressed: () {}),
+              Obx(() => PlayButtonWidget(
+                    isPlaying: audio.isPlayingRx(AudioType.music).value,
+                    onPressed: homeCtrl.togglePlay,
+                  )),
               CustomIconButton(
                 onPressed: () {},
                 icon: Icons.chat_bubble_outline_sharp,

@@ -106,6 +106,9 @@ class AudioService extends GetxService {
     track.savedPosition = Duration.zero;
 
     final src = _toSource(source);
+    // Stop explicite avant de charger une nouvelle source — évite les erreurs
+    // AVFoundation sur iOS quand le player est déjà en cours de lecture.
+    await track.player.stop();
     // Passe le volume directement à play() — plus fiable que setVolume() + play()
     // car audioplayers peut réinitialiser son état interne lors du chargement.
     await track.player.play(src, volume: targetVolume);
