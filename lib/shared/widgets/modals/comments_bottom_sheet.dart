@@ -121,21 +121,27 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
       onTap: () => FocusScope.of(context).unfocus(),
       behavior: HitTestBehavior.translucent,
       child: Padding(
+        // Pousse le sheet au-dessus du clavier.
         padding: EdgeInsets.only(bottom: keyboardHeight),
-        child: Container(
-          height: screenHeight * 0.70,
-          decoration: BoxDecoration(
-            color: AppColors.backgroundColor,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-            border: Border(
-              top: BorderSide(
-                color: AppColors.whiteColor.withValues(alpha: 0.08),
-                width: 1,
+        child: ConstrainedBox(
+          // maxHeight garantit que le sheet ne dépasse jamais l'espace disponible.
+          constraints: BoxConstraints(maxHeight: screenHeight * 0.75),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColor,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+              border: Border(
+                top: BorderSide(
+                  color: AppColors.whiteColor.withValues(alpha: 0.08),
+                  width: 1,
+                ),
               ),
             ),
-          ),
-          child: Column(
-            children: [
+            // mainAxisSize.min : la Column ne force pas une hauteur fixe,
+            // elle s'adapte à son contenu jusqu'au maxHeight du ConstrainedBox.
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
               // ─── Handle ─────────────────────────────────────────────────
               Padding(
                 padding: EdgeInsets.only(top: 12.h, bottom: 8.h),
@@ -195,7 +201,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
               Divider(color: AppColors.whiteColor.withValues(alpha: 0.07), height: 1),
 
               // ─── Liste ──────────────────────────────────────────────────
-              Expanded(
+              Flexible(
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _comments.isEmpty
@@ -280,6 +286,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
             ],
           ),
         ),
+        ),
       ),
     );
   }
@@ -347,6 +354,7 @@ class _CommentTile extends StatelessWidget {
           Container(
             width: 38.w,
             height: 38.w,
+            clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
@@ -359,12 +367,12 @@ class _CommentTile extends StatelessWidget {
               ),
             ),
             child: comment.user.profilePicture != null
-                ? ClipOval(
-                    child: Image.network(
-                      comment.user.profilePicture!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stack) => _initial(initials),
-                    ),
+                ? Image.network(
+                    comment.user.profilePicture!,
+                    width: 38.w,
+                    height: 38.w,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stack) => _initial(initials),
                   )
                 : _initial(initials),
           ),

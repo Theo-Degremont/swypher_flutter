@@ -117,14 +117,18 @@ class HomeController extends GetxController {
   void _playMusicAt(int index) {
     _musicIndex = index;
     _completeSub?.cancel();
-    _audio.play(AudioType.music, _resolveUrl(musicList[index].audioFile));
+    _audio
+        .play(AudioType.music, _resolveUrl(musicList[index].audioFile))
+        .catchError((_) => _onTrackComplete()); // fichier corrompu → track suivant
     _completeSub = _audio.onComplete(AudioType.music).listen((_) => _onTrackComplete());
   }
 
   void _playToplineAt(int index) {
     _toplineIndex = index;
     _completeSub?.cancel();
-    _audio.play(AudioType.music, _resolveUrl(toplineList[index].audioFile));
+    _audio
+        .play(AudioType.music, _resolveUrl(toplineList[index].audioFile))
+        .catchError((_) => _onTrackComplete()); // fichier corrompu → track suivant
     _completeSub = _audio.onComplete(AudioType.music).listen((_) => _onTrackComplete());
   }
 
@@ -191,5 +195,5 @@ class HomeController extends GetxController {
     final base = ApiConfiguration.baseUrl;
     final path = audioFile.startsWith('/') ? audioFile : '/$audioFile';
     return '$base$path';
-  }
+  }  
 }

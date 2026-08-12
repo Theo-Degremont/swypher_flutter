@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/home/controllers/home_controller.dart';
 import 'package:swypher_flutter/shared/constants/constants.dart';
+import 'package:swypher_flutter/shared/data/config/api_configuration.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
 import 'package:swypher_flutter/shared/services/memory_service.dart';
@@ -13,6 +14,90 @@ import 'package:swypher_flutter/shared/widgets/modals/repost_modal.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/play_button_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/progression_bar_widget.dart';
 
+// ─── Disque tournant ─────────────────────────────────────────────────────────
+
+class _SpinningDisc extends StatefulWidget {
+  const _SpinningDisc({required this.isPlaying, required this.music});
+
+  final bool isPlaying;
+  final MusicModel music;
+
+  @override
+  State<_SpinningDisc> createState() => _SpinningDiscState();
+}
+
+class _SpinningDiscState extends State<_SpinningDisc>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    );
+    if (widget.isPlaying) _ctrl.repeat();
+  }
+
+  @override
+  void didUpdateWidget(_SpinningDisc old) {
+    super.didUpdateWidget(old);
+    if (widget.isPlaying && !_ctrl.isAnimating) {
+      _ctrl.repeat();
+    } else if (!widget.isPlaying && _ctrl.isAnimating) {
+      _ctrl.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RotationTransition(
+      turns: _ctrl,
+      child: Container(
+        margin: EdgeInsets.all(5.w),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: widget.music.coverImage != null
+              ? DecorationImage(
+                  image: NetworkImage(
+                    '${ApiConfiguration.baseUrl}${widget.music.coverImage!}',
+                  ),
+                  fit: BoxFit.cover,
+                )
+              : null,
+          gradient: LinearGradient(
+            colors: [
+              AppColors.primaryLinearGradientStart,
+              AppColors.primaryLinearGradientEnd,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          border: Border.all(color: const Color(0xFF31253E), width: 5.0),
+        ),
+        child: widget.music.coverImage != null
+            ? null
+            : Center(
+                child: Icon(
+                  Icons.music_note_sharp,
+                  color: AppColors.secondaryColor,
+                  size: 50.w,
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 class MusicCardWidget extends StatelessWidget {
   const MusicCardWidget({super.key, required this.music});
 
@@ -20,9 +105,9 @@ class MusicCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audio    = AudioService.to;
+    final audio = AudioService.to;
     final homeCtrl = Get.find<HomeController>();
-    final memory   = MemoryService.instance;
+    final memory = MemoryService.instance;
 
     return Container(
       margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 35.h),
@@ -117,7 +202,9 @@ class MusicCardWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppColors.whiteColor.withValues(alpha: 0.1),
+                              color: AppColors.whiteColor.withValues(
+                                alpha: 0.1,
+                              ),
                               width: 1.0,
                             ),
                           ),
@@ -126,7 +213,9 @@ class MusicCardWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: AppColors.whiteColor.withValues(alpha: 0.1),
+                                color: AppColors.whiteColor.withValues(
+                                  alpha: 0.1,
+                                ),
                                 width: 1.0,
                               ),
                             ),
@@ -135,7 +224,9 @@ class MusicCardWidget extends StatelessWidget {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: AppColors.whiteColor.withValues(alpha: 0.1),
+                                  color: AppColors.whiteColor.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   width: 1.0,
                                 ),
                               ),
@@ -144,7 +235,9 @@ class MusicCardWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: AppColors.whiteColor.withValues(alpha: 0.1),
+                                    color: AppColors.whiteColor.withValues(
+                                      alpha: 0.1,
+                                    ),
                                     width: 1.0,
                                   ),
                                 ),
@@ -152,18 +245,29 @@ class MusicCardWidget extends StatelessWidget {
                                   margin: EdgeInsets.all(5.w),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.primaryLinearGradientStart,
-                                        AppColors.primaryLinearGradientEnd,
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
                                     border: Border.all(
-                                      color: const Color(0xFF31253E),
-                                      width: 5.0,
+                                      color: AppColors.whiteColor.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      width: 1.0,
                                     ),
+                                  ),
+                                  child: Container(
+                                    margin: EdgeInsets.all(5.w),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: AppColors.whiteColor.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        width: 1.0,
+                                      ),
+                                    ),
+
+                                    child: Obx(() => _SpinningDisc(
+                                      isPlaying: audio.isPlayingRx(AudioType.music).value,
+                                      music: music,
+                                    )),
                                   ),
                                 ),
                               ),
@@ -199,7 +303,7 @@ class MusicCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                music.beatmakerName ?? 'Artiste',
+                music.beatmakerName ?? '',
                 style: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 14.sp,
@@ -208,26 +312,29 @@ class MusicCardWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(width: 5.w),
-              Container(
-                width: 4.w,
-                height: 4.w,
-                decoration: BoxDecoration(
-                  color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
-                  shape: BoxShape.circle,
-                ),
-              ),
-              SizedBox(width: 5.w),
-              Text(
-                'Prod. ${music.beatmakerName ?? 'Artiste'}',
-                style: TextStyle(
-                  color: AppColors.secondaryTextColor,
-                  fontSize: 14.sp,
-                  letterSpacing: 0.5,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+
+              
+              // SizedBox(width: 5.w),
+
+              // Container(
+              //   width: 4.w,
+              //   height: 4.w,
+              //   decoration: BoxDecoration(
+              //     color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
+              //     shape: BoxShape.circle,
+              //   ),
+              // ),
+              // SizedBox(width: 5.w),
+              // Text(
+              //   'Prod. ${music.beatmakerName ?? ''}',
+              //   style: TextStyle(
+              //     color: AppColors.secondaryTextColor,
+              //     fontSize: 14.sp,
+              //     letterSpacing: 0.5,
+              //     fontFamily: 'Montserrat',
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
             ],
           ),
 
@@ -273,14 +380,20 @@ class MusicCardWidget extends StatelessWidget {
                     if (!requireAuth()) return;
                     memory.toggleLike(music.id);
                   },
-                  icon: isLiked ? Icons.favorite_sharp : Icons.favorite_border_sharp,
-                  iconColor: isLiked ? AppColors.primaryColor : AppColors.secondaryTextColor,
+                  icon: isLiked
+                      ? Icons.favorite_sharp
+                      : Icons.favorite_border_sharp,
+                  iconColor: isLiked
+                      ? AppColors.primaryColor
+                      : AppColors.secondaryTextColor,
                 );
               }),
-              Obx(() => PlayButtonWidget(
-                    isPlaying: audio.isPlayingRx(AudioType.music).value,
-                    onPressed: homeCtrl.togglePlay,
-                  )),
+              Obx(
+                () => PlayButtonWidget(
+                  isPlaying: audio.isPlayingRx(AudioType.music).value,
+                  onPressed: homeCtrl.togglePlay,
+                ),
+              ),
               CustomIconButton(
                 onPressed: () {
                   if (!requireAuth()) return;
