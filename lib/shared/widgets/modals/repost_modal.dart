@@ -106,7 +106,7 @@ class RepostModal extends StatelessWidget {
             // ─── Description ────────────────────────────────────────────────
             Text(
               'Tu t\'apprêtes à reposter "$musicTitle".\n\n'
-              'Ce mix apparaîtra sur ton profil et sera visible par tes abonnés. '
+              'Ce son apparaîtra sur ton profil et sera visible par tes abonnés.'
               'Cette action est définitive.',
               textAlign: TextAlign.center,
               style: TextStyle(

@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/data/config/api_configuration.dart';
 import 'package:swypher_flutter/shared/data/models/api_response.dart';
+import 'package:swypher_flutter/shared/data/models/comment_model.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/data/network/api_client.dart';
 
@@ -116,6 +117,25 @@ class MusicApi extends GetxService {
       _client.post<void>(
         '${ApiConfiguration.musicRepost}/$musicId/repost',
         requiresAuth: true,
+      );
+
+  /// Récupère les commentaires d'une musique (GET /music/:musicId/comments).
+  Future<ApiResponse<List<CommentModel>>> getComments(String musicId) =>
+      _client.get<List<CommentModel>>(
+        '${ApiConfiguration.musicPath}/$musicId/comments',
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => CommentModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  /// Poste un commentaire (POST /music/:musicId/comments).
+  Future<ApiResponse<CommentModel>> postComment(String musicId, String content) =>
+      _client.post<CommentModel>(
+        '${ApiConfiguration.musicPath}/$musicId/comments',
+        requiresAuth: true,
+        body: {'content': content},
+        fromData: (data) => CommentModel.fromJson(data as Map<String, dynamic>),
       );
 
   String _audioMimeType(String? extension) {

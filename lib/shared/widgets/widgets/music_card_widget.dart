@@ -6,7 +6,9 @@ import 'package:swypher_flutter/shared/constants/constants.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
 import 'package:swypher_flutter/shared/services/memory_service.dart';
+import 'package:swypher_flutter/shared/utils/auth_guard.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
+import 'package:swypher_flutter/shared/widgets/modals/comments_bottom_sheet.dart';
 import 'package:swypher_flutter/shared/widgets/modals/repost_modal.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/play_button_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/progression_bar_widget.dart';
@@ -250,10 +252,13 @@ class MusicCardWidget extends StatelessWidget {
                   child: CustomIconButton(
                     onPressed: isReposted
                         ? null
-                        : () => RepostModal.show(
+                        : () {
+                            if (!requireAuth()) return;
+                            RepostModal.show(
                               musicId: music.id,
                               musicTitle: music.title,
-                            ),
+                            );
+                          },
                     icon: Icons.repeat_sharp,
                     iconColor: isReposted
                         ? AppColors.primaryColor
@@ -264,7 +269,10 @@ class MusicCardWidget extends StatelessWidget {
               Obx(() {
                 final isLiked = memory.musicLikedObs.contains(music.id);
                 return CustomIconButton(
-                  onPressed: () => memory.toggleLike(music.id),
+                  onPressed: () {
+                    if (!requireAuth()) return;
+                    memory.toggleLike(music.id);
+                  },
                   icon: isLiked ? Icons.favorite_sharp : Icons.favorite_border_sharp,
                   iconColor: isLiked ? AppColors.primaryColor : AppColors.secondaryTextColor,
                 );
@@ -274,7 +282,13 @@ class MusicCardWidget extends StatelessWidget {
                     onPressed: homeCtrl.togglePlay,
                   )),
               CustomIconButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (!requireAuth()) return;
+                  CommentsBottomSheet.show(
+                    musicId: music.id,
+                    musicTitle: music.title,
+                  );
+                },
                 icon: Icons.chat_bubble_outline_sharp,
                 iconColor: AppColors.secondaryTextColor,
               ),

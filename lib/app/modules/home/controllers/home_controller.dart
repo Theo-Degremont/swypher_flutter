@@ -182,6 +182,8 @@ class HomeController extends GetxController {
     }
   }
 
+  void pauseMusic() => _audio.pause(AudioType.music);
+
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
   String _resolveUrl(String audioFile) {
