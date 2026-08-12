@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/data/config/api_configuration.dart';
 import 'package:swypher_flutter/shared/data/models/api_response.dart';
+import 'package:swypher_flutter/shared/data/models/comment_model.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/data/network/api_client.dart';
 
@@ -62,6 +63,80 @@ class MusicApi extends GetxService {
       fromData: (data) => MusicModel.fromJson(data as Map<String, dynamic>),
     );
   }
+
+  /// Récupère le feed de musiques (GET /music/feed).
+  Future<ApiResponse<List<MusicModel>>> getFeed() => _client.get<List<MusicModel>>(
+        ApiConfiguration.musicFeed,
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  /// Récupère une musique du feed (GET /music/feed/one).
+  Future<ApiResponse<MusicModel>> getMusicFeedOne() => _client.get<MusicModel>(
+        ApiConfiguration.musicFeedOne,
+        requiresAuth: true,
+        fromData: (data) => MusicModel.fromJson(data as Map<String, dynamic>),
+      );
+
+  /// Récupère le feed de toplines (GET /music/topline/feed).
+  Future<ApiResponse<List<MusicModel>>> getToplineFeed() => _client.get<List<MusicModel>>(
+        ApiConfiguration.toplineFeed,
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  /// Récupère une topline du feed (GET /music/topline/feed/one).
+  Future<ApiResponse<MusicModel>> getToplineFeedOne() => _client.get<MusicModel>(
+        ApiConfiguration.toplineFeedOne,
+        requiresAuth: true,
+        fromData: (data) => MusicModel.fromJson(data as Map<String, dynamic>),
+      );
+
+  /// Like une liste de musiques (POST /music/like).
+  Future<ApiResponse<void>> postLike(List<String> musicIds) =>
+      _client.post<void>(
+        ApiConfiguration.musicLike,
+        requiresAuth: true,
+        body: {'musicIds': musicIds},
+      );
+
+  /// Unlike une liste de musiques (DELETE /music/like).
+  Future<ApiResponse<void>> deleteLike(List<String> musicIds) =>
+      _client.deleteWithBody<void>(
+        ApiConfiguration.musicLike,
+        requiresAuth: true,
+        body: {'musicIds': musicIds},
+      );
+
+  /// Reposte une musique (POST /music/:musicId/repost).
+  Future<ApiResponse<void>> postRepost(String musicId) =>
+      _client.post<void>(
+        '${ApiConfiguration.musicRepost}/$musicId/repost',
+        requiresAuth: true,
+      );
+
+  /// Récupère les commentaires d'une musique (GET /music/:musicId/comments).
+  Future<ApiResponse<List<CommentModel>>> getComments(String musicId) =>
+      _client.get<List<CommentModel>>(
+        '${ApiConfiguration.musicPath}/$musicId/comments',
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => CommentModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  /// Poste un commentaire (POST /music/:musicId/comments).
+  Future<ApiResponse<CommentModel>> postComment(String musicId, String content) =>
+      _client.post<CommentModel>(
+        '${ApiConfiguration.musicPath}/$musicId/comments',
+        requiresAuth: true,
+        body: {'content': content},
+        fromData: (data) => CommentModel.fromJson(data as Map<String, dynamic>),
+      );
 
   String _audioMimeType(String? extension) {
     switch (extension?.toLowerCase()) {

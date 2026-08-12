@@ -10,101 +10,156 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: () => controller.selectTab(0),
-                child: Obx(() {
-                  final selected = controller.selectedTab.value == 0;
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Auto'.toUpperCase(),
-                        style: TextStyle(
-                          color: selected
-                              ? AppColors.primaryColor
-                              : AppColors.secondaryTextColor,
-                          fontSize: 12.sp,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      if (selected) ...[
-                        SizedBox(height: 4.h),
-                        Container(
-                          width: 40.w,
-                          height: 3.h,
-                          color: AppColors.primaryColor,
-                        ),
-                      ],
-                    ],
-                  );
-                }),
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      final isEmpty =
+          controller.musicList.isEmpty && controller.toplineList.isEmpty;
+
+      if (isEmpty) {
+        return Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Text(
+              'Aucune musique pour le moment',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 20.sp,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
               ),
-              SizedBox(width: 20.w),
-              GestureDetector(
-                onTap: () => controller.selectTab(1),
-                child: Obx(() {
-                  final selected = controller.selectedTab.value == 1;
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Prods'.toUpperCase(),
-                        style: TextStyle(
-                          color: selected
-                              ? AppColors.primaryColor
-                              : AppColors.secondaryTextColor,
-                          fontSize: 12.sp,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      if (selected) ...[
-                        SizedBox(height: 4.h),
-                        Container(
-                          width: 50.w,
-                          height: 3.h,
-                          color: AppColors.primaryColor,
-                        ),
-                      ],
-                    ],
-                  );
-                }),
-              ),
-            ],
+            ),
           ),
-        ),
-        Expanded(
-          flex: 9,
-          child: PageView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return MusicCardWidget(
-                id: index,
-                songTitle: 'Song Title ${index + 1}',
-                artistName: 'Artist Name',
-                prodArtistName: 'Prod.Artist Name',
-                timeStamp: '1:30',
-                totalTime: '3:45',
+        );
+      }
+
+      return Column(
+        children: [
+          // ─── Tabs ──────────────────────────────────────────────────────────
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => controller.selectTab(0),
+                  child: Obx(() {
+                    final selected = controller.selectedTab.value == 0;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Musiques'.toUpperCase(),
+                          style: TextStyle(
+                            color: selected
+                                ? AppColors.primaryColor
+                                : AppColors.secondaryTextColor,
+                            fontSize: 12.sp,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        if (selected) ...[
+                          SizedBox(height: 4.h),
+                          Container(
+                            width: 40.w,
+                            height: 3.h,
+                            color: AppColors.primaryColor,
+                          ),
+                        ],
+                      ],
+                    );
+                  }),
+                ),
+                SizedBox(width: 20.w),
+                GestureDetector(
+                  onTap: () => controller.selectTab(1),
+                  child: Obx(() {
+                    final selected = controller.selectedTab.value == 1;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Prods'.toUpperCase(),
+                          style: TextStyle(
+                            color: selected
+                                ? AppColors.primaryColor
+                                : AppColors.secondaryTextColor,
+                            fontSize: 12.sp,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        if (selected) ...[
+                          SizedBox(height: 4.h),
+                          Container(
+                            width: 50.w,
+                            height: 3.h,
+                            color: AppColors.primaryColor,
+                          ),
+                        ],
+                      ],
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+
+          // ─── Feed ──────────────────────────────────────────────────────────
+          Expanded(
+            flex: 9,
+            child: Obx(() {
+              // IndexedStack garde les deux PageViews en mémoire pour ne pas
+              // recréer les widgets au changement d'onglet.
+              return IndexedStack(
+                index: controller.selectedTab.value,
+                children: [
+                  // ── Onglet Musiques ─────────────────────────────────────
+                  Obx(() {
+                    if (controller.musicList.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return PageView.builder(
+                      controller: controller.musicPageController,
+                      scrollDirection: Axis.vertical,
+                      itemCount: controller.musicList.length,
+                      onPageChanged: controller.onMusicPageChanged,
+                      itemBuilder: (_, index) =>
+                          MusicCardWidget(music: controller.musicList[index]),
+                    );
+                  }),
+
+                  // ── Onglet Toplines ─────────────────────────────────────
+                  Obx(() {
+                    if (controller.toplineList.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return PageView.builder(
+                      controller: controller.toplinePageController,
+                      scrollDirection: Axis.vertical,
+                      itemCount: controller.toplineList.length,
+                      onPageChanged: controller.onToplinePageChanged,
+                      itemBuilder: (_, index) =>
+                          MusicCardWidget(music: controller.toplineList[index]),
+                    );
+                  }),
+                ],
               );
-            },
+            }),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }

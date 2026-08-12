@@ -62,7 +62,11 @@ class ApiClient extends GetxService {
         case 'PATCH':
           response = await _http.patch(url, body, headers: headers, query: query);
         case 'DELETE':
-          response = await _http.delete(url, headers: headers, query: query);
+          if (body != null) {
+            response = await _http.request(url, 'DELETE', body: body, headers: headers, query: query);
+          } else {
+            response = await _http.delete(url, headers: headers, query: query);
+          }
         default:
           return ApiResponse.unexpected();
       }
@@ -204,6 +208,20 @@ class ApiClient extends GetxService {
         path: path,
         requiresAuth: requiresAuth,
         query: _langQuery(query),
+        fromData: fromData,
+      );
+
+  Future<ApiResponse<T>> deleteWithBody<T>(
+    String path, {
+    bool requiresAuth = true,
+    Map<String, dynamic> body = const {},
+    T Function(dynamic)? fromData,
+  }) =>
+      _execute(
+        method: 'DELETE',
+        path: path,
+        requiresAuth: requiresAuth,
+        body: _withLang(body),
         fromData: fromData,
       );
 

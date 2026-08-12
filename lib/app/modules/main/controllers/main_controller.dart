@@ -38,12 +38,9 @@ class MainController extends GetxController {
       return;
     }
 
-    switch (index) {
-      case 0: home.onInit();
-      case 1: search.onInit();
-      case 2: library.onInit();
-      case 3: profile.onInit();
-      case 4: record.onInit();
+    // Met en pause la musique quand on quitte l'onglet home.
+    if (currentIndex.value == 0 && index != 0) {
+      home.pauseMusic();
     }
 
     currentIndex.value = index;

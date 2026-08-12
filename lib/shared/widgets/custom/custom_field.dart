@@ -52,7 +52,7 @@ class CustomField extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: obscureText,
-      keyboardType: keyboardType,
+      keyboardType: isExpandable ? TextInputType.multiline : keyboardType,
       textInputAction: isExpandable ? TextInputAction.newline : textInputAction,
       onSubmitted: (_) => onSubmitted?.call(),
       focusNode: focusNode,
