@@ -7,6 +7,7 @@ import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
 import 'package:swypher_flutter/shared/services/memory_service.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
+import 'package:swypher_flutter/shared/widgets/modals/repost_modal.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/play_button_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/progression_bar_widget.dart';
 
@@ -242,11 +243,24 @@ class MusicCardWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustomIconButton(
-                onPressed: () {},
-                icon: Icons.repeat_sharp,
-                iconColor: AppColors.secondaryTextColor,
-              ),
+              Obx(() {
+                final isReposted = memory.musicRepostedObs.contains(music.id);
+                return Opacity(
+                  opacity: isReposted ? 0.3 : 1.0,
+                  child: CustomIconButton(
+                    onPressed: isReposted
+                        ? null
+                        : () => RepostModal.show(
+                              musicId: music.id,
+                              musicTitle: music.title,
+                            ),
+                    icon: Icons.repeat_sharp,
+                    iconColor: isReposted
+                        ? AppColors.primaryColor
+                        : AppColors.secondaryTextColor,
+                  ),
+                );
+              }),
               Obx(() {
                 final isLiked = memory.musicLikedObs.contains(music.id);
                 return CustomIconButton(

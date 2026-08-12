@@ -111,6 +111,13 @@ class MusicApi extends GetxService {
         body: {'musicIds': musicIds},
       );
 
+  /// Reposte une musique (POST /music/:musicId/repost).
+  Future<ApiResponse<void>> postRepost(String musicId) =>
+      _client.post<void>(
+        '${ApiConfiguration.musicRepost}/$musicId/repost',
+        requiresAuth: true,
+      );
+
   String _audioMimeType(String? extension) {
     switch (extension?.toLowerCase()) {
       case 'mp3':
