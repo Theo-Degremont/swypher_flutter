@@ -72,6 +72,22 @@ class MusicApi extends GetxService {
             .toList(),
       );
 
+  /// Récupère une musique du feed (GET /music/feed/one).
+  Future<ApiResponse<MusicModel>> getMusicFeedOne() => _client.get<MusicModel>(
+        ApiConfiguration.musicFeedOne,
+        requiresAuth: true,
+        fromData: (data) => MusicModel.fromJson(data as Map<String, dynamic>),
+      );
+
+  /// Récupère le feed de toplines (GET /music/topline/feed).
+  Future<ApiResponse<List<MusicModel>>> getToplineFeed() => _client.get<List<MusicModel>>(
+        ApiConfiguration.toplineFeed,
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
   /// Récupère une topline du feed (GET /music/topline/feed/one).
   Future<ApiResponse<MusicModel>> getToplineFeedOne() => _client.get<MusicModel>(
         ApiConfiguration.toplineFeedOne,
