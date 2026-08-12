@@ -15,18 +15,23 @@ class HomeView extends GetView<HomeController> {
         return const Center(child: CircularProgressIndicator());
       }
 
-      final isEmpty = controller.musicList.isEmpty && controller.toplineList.isEmpty;
+      final isEmpty =
+          controller.musicList.isEmpty && controller.toplineList.isEmpty;
 
       if (isEmpty) {
         return Center(
-          child: Text(
-            'Aucune musique pour le moment',
-            style: TextStyle(
-              color: AppColors.primaryColor,
-              fontSize: 14.sp,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Text(
+              'Aucune musique pour le moment',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 20.sp,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+              ),
             ),
           ),
         );
@@ -122,7 +127,9 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   // ── Onglet Musiques ─────────────────────────────────────
                   Obx(() {
-                    if (controller.musicList.isEmpty) return const SizedBox.shrink();
+                    if (controller.musicList.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
                     return PageView.builder(
                       controller: controller.musicPageController,
                       scrollDirection: Axis.vertical,
@@ -135,7 +142,9 @@ class HomeView extends GetView<HomeController> {
 
                   // ── Onglet Toplines ─────────────────────────────────────
                   Obx(() {
-                    if (controller.toplineList.isEmpty) return const SizedBox.shrink();
+                    if (controller.toplineList.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
                     return PageView.builder(
                       controller: controller.toplinePageController,
                       scrollDirection: Axis.vertical,

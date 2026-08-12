@@ -95,6 +95,22 @@ class MusicApi extends GetxService {
         fromData: (data) => MusicModel.fromJson(data as Map<String, dynamic>),
       );
 
+  /// Like une liste de musiques (POST /music/like).
+  Future<ApiResponse<void>> postLike(List<String> musicIds) =>
+      _client.post<void>(
+        ApiConfiguration.musicLike,
+        requiresAuth: true,
+        body: {'musicIds': musicIds},
+      );
+
+  /// Unlike une liste de musiques (DELETE /music/like).
+  Future<ApiResponse<void>> deleteLike(List<String> musicIds) =>
+      _client.deleteWithBody<void>(
+        ApiConfiguration.musicLike,
+        requiresAuth: true,
+        body: {'musicIds': musicIds},
+      );
+
   String _audioMimeType(String? extension) {
     switch (extension?.toLowerCase()) {
       case 'mp3':

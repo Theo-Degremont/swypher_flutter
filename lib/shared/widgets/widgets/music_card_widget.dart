@@ -5,6 +5,7 @@ import 'package:swypher_flutter/app/modules/home/controllers/home_controller.dar
 import 'package:swypher_flutter/shared/constants/constants.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
+import 'package:swypher_flutter/shared/services/memory_service.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/play_button_widget.dart';
 import 'package:swypher_flutter/shared/widgets/widgets/progression_bar_widget.dart';
@@ -16,8 +17,9 @@ class MusicCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audio = AudioService.to;
+    final audio    = AudioService.to;
     final homeCtrl = Get.find<HomeController>();
+    final memory   = MemoryService.instance;
 
     return Container(
       margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 35.h),
@@ -245,11 +247,14 @@ class MusicCardWidget extends StatelessWidget {
                 icon: Icons.repeat_sharp,
                 iconColor: AppColors.secondaryTextColor,
               ),
-              CustomIconButton(
-                onPressed: () {},
-                icon: Icons.favorite_border_sharp,
-                iconColor: AppColors.secondaryTextColor,
-              ),
+              Obx(() {
+                final isLiked = memory.musicLikedObs.contains(music.id);
+                return CustomIconButton(
+                  onPressed: () => memory.toggleLike(music.id),
+                  icon: isLiked ? Icons.favorite_sharp : Icons.favorite_border_sharp,
+                  iconColor: isLiked ? AppColors.primaryColor : AppColors.secondaryTextColor,
+                );
+              }),
               Obx(() => PlayButtonWidget(
                     isPlaying: audio.isPlayingRx(AudioType.music).value,
                     onPressed: homeCtrl.togglePlay,
