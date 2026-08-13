@@ -25,8 +25,8 @@ class MainController extends GetxController {
     super.onInit();
     isLoggedIn.value = MemoryService.instance.access != null;
 
-    home   = Get.find<HomeController>();
-    search = Get.find<SearchPageController>();
+    home    = Get.find<HomeController>();
+    search  = Get.find<SearchPageController>();
     library = Get.find<LibraryController>();
     profile = Get.find<ProfileController>();
     record  = Get.find<MusicStudioController>();
@@ -43,6 +43,16 @@ class MainController extends GetxController {
       home.pauseMusic();
     }
 
+    // Stoppe la musique library quand on quitte l'onglet library.
+    if (currentIndex.value == 2 && index != 2) {
+      library.stopMusic();
+    }
+
+    // Rafraîchit la library quand on arrive sur l'onglet.
+    if (index == 2) {
+      library.reloadLiked();
+    }
+
     currentIndex.value = index;
   }
 
@@ -51,6 +61,4 @@ class MainController extends GetxController {
     currentIndex.value = 0;
     isLoggedIn.value = MemoryService.instance.access != null;
   }
-
-
 }

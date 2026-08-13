@@ -63,7 +63,7 @@ class CustomNavBar extends StatelessWidget {
           ),
           CustomNavBarTab(
             icon: Icons.library_music_rounded,
-            label: 'Library',
+            label: 'Playlist',
             isSelected: currentIndex == 2,
             onPressed: () => onTabSelected?.call(2),
           ),

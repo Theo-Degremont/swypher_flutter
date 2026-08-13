@@ -374,7 +374,7 @@ class MusicCardWidget extends StatelessWidget {
                 );
               }),
               Obx(() {
-                final isLiked = memory.musicLikedObs.contains(music.id);
+                final isLiked = memory.likedMusicIdsObs.contains(music.id);
                 return CustomIconButton(
                   onPressed: () {
                     if (!requireAuth()) return;
