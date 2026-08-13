@@ -9,6 +9,10 @@ class MemoryService extends GetxService {
   final musicLikedObs    = <String>[].obs;
   final musicDislikedObs = <String>[].obs;
 
+  /// IDs des musiques réellement likées (pour l'affichage du cœur).
+  /// Mis à jour au toggle et synchronisé depuis l'API au chargement de la library.
+  final likedMusicIdsObs = <String>[].obs;
+
   // ─── Repost ──────────────────────────────────────────────────────────────────
   final musicRepostedObs = <String>[].obs;
 
@@ -33,6 +37,9 @@ class MemoryService extends GetxService {
     musicLikedObs.assignAll(liked.cast<String>());
     musicDislikedObs.assignAll(disliked.cast<String>());
     musicRepostedObs.assignAll(reposted.cast<String>());
+
+    final likedIds = _storage.read<List>('likedMusicIds') ?? [];
+    likedMusicIdsObs.assignAll(likedIds.cast<String>());
   }
 
   Future<void> ensureInitialized() async {
@@ -55,12 +62,27 @@ class MemoryService extends GetxService {
     if (musicLikedObs.contains(musicId)) {
       musicLikedObs.remove(musicId);
       if (!musicDislikedObs.contains(musicId)) musicDislikedObs.add(musicId);
+      likedMusicIdsObs.remove(musicId);
     } else {
       musicDislikedObs.remove(musicId);
       musicLikedObs.add(musicId);
+      if (!likedMusicIdsObs.contains(musicId)) likedMusicIdsObs.add(musicId);
     }
     _storage.write('musicLiked',    musicLikedObs.toList());
     _storage.write('musicDisliked', musicDislikedObs.toList());
+    _storage.write('likedMusicIds', likedMusicIdsObs.toList());
+  }
+
+  /// Synchronise la liste d'affichage avec les IDs récupérés depuis l'API.
+  void syncLikedIds(List<String> ids) {
+    likedMusicIdsObs.assignAll(ids);
+    _storage.write('likedMusicIds', ids);
+  }
+
+  /// Retire un ID de la liste d'affichage (après suppression depuis la library).
+  void removeLikedId(String musicId) {
+    likedMusicIdsObs.remove(musicId);
+    _storage.write('likedMusicIds', likedMusicIdsObs.toList());
   }
 
   // ─── Repost ──────────────────────────────────────────────────────────────────

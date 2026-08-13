@@ -112,6 +112,16 @@ class MusicApi extends GetxService {
         body: {'musicIds': musicIds},
       );
 
+  /// Récupère les musiques likées de l'utilisateur (GET /music/like).
+  Future<ApiResponse<List<MusicModel>>> getLiked() =>
+      _client.get<List<MusicModel>>(
+        ApiConfiguration.musicLike,
+        requiresAuth: true,
+        fromData: (data) => ((data as Map<String, dynamic>)['musics'] as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
   /// Reposte une musique (POST /music/:musicId/repost).
   Future<ApiResponse<void>> postRepost(String musicId) =>
       _client.post<void>(
