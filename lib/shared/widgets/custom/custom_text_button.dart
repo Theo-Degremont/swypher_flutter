@@ -13,6 +13,7 @@ class CustomTextButton extends StatefulWidget {
     this.borderRadius = 15.0,
     this.isLoading = false,
     this.isEnabled = true,
+    this.haveBorder = false,
   });
 
   final VoidCallback? onPressed;
@@ -23,6 +24,7 @@ class CustomTextButton extends StatefulWidget {
   final double borderRadius;
   final bool isLoading;
   final bool isEnabled;
+  final bool haveBorder;
 
   @override
   State<CustomTextButton> createState() => _CustomTextButtonState();
@@ -58,12 +60,17 @@ class _CustomTextButtonState extends State<CustomTextButton> {
               borderRadius: BorderRadius.circular(widget.borderRadius.w),
               gradient: LinearGradient(
                 colors: [
-                  widget.primaryGradientColor ?? AppColors.primaryLinearGradientStart,
-                  widget.secondaryGradientColor ?? AppColors.primaryLinearGradientEnd,
+                  widget.primaryGradientColor ??
+                      AppColors.primaryLinearGradientStart,
+                  widget.secondaryGradientColor ??
+                      AppColors.primaryLinearGradientEnd,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
+              border: widget.haveBorder
+                  ? Border.all(color: AppColors.primaryColor, width: 1.5.w)
+                  : null,
               boxShadow: [
                 BoxShadow(
                   color: AppColors.tertiaryColor.withValues(alpha: 0.5),

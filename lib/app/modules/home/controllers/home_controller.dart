@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/data/config/api_configuration.dart';
@@ -27,7 +25,6 @@ class HomeController extends GetxController {
 
   // ─── Fetch tracking ──────────────────────────────────────────────────────────
 
-  /// true dès que le feed topline a été chargé (évite un re-fetch au retour).
   bool _toplineFeedFetched = false;
   final _musicFetchedIndices   = <int>{};
   final _toplineFetchedIndices = <int>{};
@@ -35,7 +32,6 @@ class HomeController extends GetxController {
   // ─── Audio ───────────────────────────────────────────────────────────────────
 
   final _audio = AudioService.to;
-  StreamSubscription? _completeSub;
 
   // ─── Init / Close ────────────────────────────────────────────────────────────
 
@@ -49,10 +45,8 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
-    _completeSub?.cancel();
     musicPageController.dispose();
     toplinePageController.dispose();
-    _audio.stop(AudioType.music);
     super.onClose();
   }
 
@@ -63,14 +57,12 @@ class HomeController extends GetxController {
     selectedTab.value = tab;
 
     if (tab == 1) {
-      // → Toplines : fetch si jamais fait, sinon reprend la lecture courante.
       if (!_toplineFeedFetched) {
         _fetchToplineFeed();
       } else if (toplineList.isNotEmpty) {
         _playToplineAt(_toplineIndex);
       }
     } else {
-      // → Musiques : reprend sans re-fetch.
       if (musicList.isNotEmpty) {
         _playMusicAt(_musicIndex);
       }
@@ -116,20 +108,22 @@ class HomeController extends GetxController {
 
   void _playMusicAt(int index) {
     _musicIndex = index;
-    _completeSub?.cancel();
+    final music = musicList[index];
     _audio
-        .play(AudioType.music, _resolveUrl(musicList[index].audioFile))
-        .catchError((_) => _onTrackComplete()); // fichier corrompu → track suivant
-    _completeSub = _audio.onComplete(AudioType.music).listen((_) => _onTrackComplete());
+        .play(AudioType.music, _resolveUrl(music.audioFile))
+        .catchError((_) => _onTrackComplete());
+    _audio.setCurrentMusic(music, _resolveCoverUrl(music.coverImage));
+    _audio.listenToMusicComplete(_onTrackComplete);
   }
 
   void _playToplineAt(int index) {
     _toplineIndex = index;
-    _completeSub?.cancel();
+    final music = toplineList[index];
     _audio
-        .play(AudioType.music, _resolveUrl(toplineList[index].audioFile))
-        .catchError((_) => _onTrackComplete()); // fichier corrompu → track suivant
-    _completeSub = _audio.onComplete(AudioType.music).listen((_) => _onTrackComplete());
+        .play(AudioType.music, _resolveUrl(music.audioFile))
+        .catchError((_) => _onTrackComplete());
+    _audio.setCurrentMusic(music, _resolveCoverUrl(music.coverImage));
+    _audio.listenToMusicComplete(_onTrackComplete);
   }
 
   void _onTrackComplete() {
@@ -142,6 +136,8 @@ class HomeController extends GetxController {
           curve: Curves.easeInOut,
         );
         _playMusicAt(next);
+      } else {
+        _audio.clearCurrentMusic();
       }
     } else {
       final next = _toplineIndex + 1;
@@ -152,6 +148,8 @@ class HomeController extends GetxController {
           curve: Curves.easeInOut,
         );
         _playToplineAt(next);
+      } else {
+        _audio.clearCurrentMusic();
       }
     }
   }
@@ -186,8 +184,6 @@ class HomeController extends GetxController {
     }
   }
 
-  void pauseMusic() => _audio.pause(AudioType.music);
-
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
   String _resolveUrl(String audioFile) {
@@ -195,5 +191,13 @@ class HomeController extends GetxController {
     final base = ApiConfiguration.baseUrl;
     final path = audioFile.startsWith('/') ? audioFile : '/$audioFile';
     return '$base$path';
-  }  
+  }
+
+  String? _resolveCoverUrl(String? coverImage) {
+    if (coverImage == null) return null;
+    if (coverImage.startsWith('http://') || coverImage.startsWith('https://')) return coverImage;
+    final base = ApiConfiguration.baseUrl;
+    final path = coverImage.startsWith('/') ? coverImage : '/$coverImage';
+    return '$base$path';
+  }
 }

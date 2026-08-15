@@ -237,6 +237,36 @@ class ApiClient extends GetxService {
           'Authorization': 'Bearer ${_memory.access}',
       };
 
+  Future<ApiResponse<T>> patchMultipart<T>(
+    String path, {
+    bool requiresAuth = true,
+    required FormData formData,
+    T Function(dynamic)? fromData,
+  }) async {
+    try {
+      final url = '${ApiConfiguration.apiUrl}$path';
+      final headers =
+          requiresAuth ? _authMultipartHeaders : _baseMultipartHeaders;
+      final response = await _http.patch(url, formData, headers: headers);
+
+      if (response.statusCode == 401 && requiresAuth) {
+        final refreshed = await _tryRefresh();
+        if (refreshed) {
+          final retryResponse = await _http.patch(
+            url,
+            formData,
+            headers: _authMultipartHeaders,
+          );
+          return _parse(retryResponse, fromData);
+        }
+      }
+
+      return _parse(response, fromData);
+    } catch (_) {
+      return ApiResponse.networkError();
+    }
+  }
+
   Future<ApiResponse<T>> postMultipart<T>(
     String path, {
     bool requiresAuth = true,
@@ -249,9 +279,6 @@ class ApiClient extends GetxService {
           requiresAuth ? _authMultipartHeaders : _baseMultipartHeaders;
       final response = await _http.post(url, formData, headers: headers);
 
-      // ignore: avoid_print
-      print('[MusicApi] POST $url → ${response.statusCode} | body: ${response.body}');
-
       if (response.statusCode == 401 && requiresAuth) {
         final refreshed = await _tryRefresh();
         if (refreshed) {
@@ -260,8 +287,6 @@ class ApiClient extends GetxService {
             formData,
             headers: _authMultipartHeaders,
           );
-          // ignore: avoid_print
-          print('[MusicApi] RETRY → ${retryResponse.statusCode} | body: ${retryResponse.body}');
           return _parse(retryResponse, fromData);
         }
       }

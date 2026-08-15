@@ -7,6 +7,7 @@ import 'package:swypher_flutter/shared/data/models/api_response.dart';
 import 'package:swypher_flutter/shared/data/models/comment_model.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/data/network/api_client.dart';
+import 'package:swypher_flutter/shared/services/memory_service.dart';
 
 class MusicApi extends GetxService {
   final ApiClient _client = Get.find<ApiClient>();
@@ -24,7 +25,7 @@ class MusicApi extends GetxService {
     final fields = <String, dynamic>{
       'title': title,
       'status': status,
-      'requestLanguage': 'fr',
+      'requestLanguage': MemoryService.instance.languageCode ?? 'fr',
       'voiceVolume': voiceVolume.toStringAsFixed(2),
       'musicVolume': musicVolume.toStringAsFixed(2),
     };
@@ -166,4 +167,37 @@ class MusicApi extends GetxService {
         return 'audio/mpeg';
     }
   }
+
+  Future<ApiResponse<void>> deleteMusic(String musicId) =>
+      _client.delete<void>(
+        '${ApiConfiguration.musicPath}/$musicId',
+        requiresAuth: true,
+      );
+
+  Future<ApiResponse<List<MusicModel>>> getUserMusics(String userId) =>
+      _client.get<List<MusicModel>>(
+        '${ApiConfiguration.musicUserPath}/$userId',
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  Future<ApiResponse<List<MusicModel>>> getUserToplines(String userId) =>
+      _client.get<List<MusicModel>>(
+        '${ApiConfiguration.toplineUserPath}/$userId',
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  Future<ApiResponse<List<MusicModel>>> getUserReposts(String userId) =>
+      _client.get<List<MusicModel>>(
+        '${ApiConfiguration.repostUserPath}/$userId',
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
 }

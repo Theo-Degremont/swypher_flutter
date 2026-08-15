@@ -76,6 +76,10 @@
 	<string>Swypher a besoin de votre microphone pour enregistrer votre voix.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Swypher a besoin d'accéder à votre galerie pour choisir une image de couverture.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
