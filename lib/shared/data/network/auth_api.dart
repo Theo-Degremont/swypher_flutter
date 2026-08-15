@@ -54,4 +54,21 @@ class AuthApi extends GetxService {
         requiresAuth: true,
         fromData: (data) => UserModel.fromJson(data as Map<String, dynamic>),
       );
+
+  Future<ApiResponse<UserModel>> updateMe({
+    String? pseudo,
+    String? stageName,
+    String? description,
+  }) async {
+    final body = <String, dynamic>{
+      if (pseudo      != null) 'pseudo':      pseudo,
+      if (stageName   != null) 'stageName':   stageName,
+      if (description != null) 'description': description,
+    };
+    return _client.patch<UserModel>(
+      ApiConfiguration.mePath,
+      body: body,
+      fromData: (data) => UserModel.fromJson(data as Map<String, dynamic>),
+    );
+  }
 }

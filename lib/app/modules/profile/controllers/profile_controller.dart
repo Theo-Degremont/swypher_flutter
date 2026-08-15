@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:swypher_flutter/app/modules/profile/services/profile_service.dart';
+import 'package:swypher_flutter/shared/constants/color.dart';
 import 'package:swypher_flutter/shared/data/config/api_configuration.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
@@ -23,6 +28,15 @@ class ProfileController extends GetxController {
   final currentIndex = (-1).obs;
   StreamSubscription? _completeSub;
 
+  // ─── Edit mode ───────────────────────────────────────────────────────────────
+  final isEditMode       = false.obs;
+  final isSaving         = false.obs;
+  final pendingAvatarFile = Rx<File?>(null);
+
+  late final TextEditingController stageNameCtrl;
+  late final TextEditingController pseudoCtrl;
+  late final TextEditingController descriptionCtrl;
+
   bool _musicsFetched   = false;
   bool _toplinesFetched = false;
   bool _repostsFetched  = false;
@@ -33,6 +47,9 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
     _service = Get.find<ProfileService>();
+    stageNameCtrl   = TextEditingController();
+    pseudoCtrl      = TextEditingController();
+    descriptionCtrl = TextEditingController();
     if (_memory.access == null) return;
     _initProfile();
   }
@@ -113,7 +130,65 @@ class ProfileController extends GetxController {
     }
   }
 
+  // ─── Edit mode ───────────────────────────────────────────────────────────────
+
+  void enterEditMode() {
+    final user = _memory.currentUser;
+    stageNameCtrl.text   = user?.stageName ?? user?.pseudo ?? '';
+    pseudoCtrl.text      = user?.pseudo ?? '';
+    descriptionCtrl.text = user?.description ?? '';
+    pendingAvatarFile.value = null;
+    isEditMode.value = true;
+  }
+
+  void cancelEditMode() {
+    isEditMode.value = false;
+    pendingAvatarFile.value = null;
+  }
+
+  Future<void> pickAvatar() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+    if (picked != null) pendingAvatarFile.value = File(picked.path);
+  }
+
+  Future<void> confirmEdit() async {
+    final pseudo      = pseudoCtrl.text.trim();
+    final stageName   = stageNameCtrl.text.trim();
+    final description = descriptionCtrl.text.trim();
+
+    isSaving.value = true;
+    final result = await _service.updateProfile(
+      pseudo:      pseudo.isNotEmpty      ? pseudo      : null,
+      stageName:   stageName.isNotEmpty   ? stageName   : null,
+      description: description.isNotEmpty ? description : null,
+    );
+    isSaving.value = false;
+
+    if (result.error != null) {
+      Get.snackbar(
+        'Erreur',
+        result.error!,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.backgroundColor,
+        colorText: AppColors.primaryTextColor,
+        borderColor: AppColors.primaryColor.withValues(alpha: 0.4),
+        borderWidth: 1,
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        duration: const Duration(seconds: 4),
+      );
+      return;
+    }
+
+    if (pendingAvatarFile.value != null) {
+      _memory.setLocalAvatarPath(pendingAvatarFile.value!.path);
+    }
+    isEditMode.value = false;
+    pendingAvatarFile.value = null;
+  }
+
   void playAt(int index) {
+    if (isEditMode.value) cancelEditMode();
     final list = activeList;
     if (index < 0 || index >= list.length) return;
     currentIndex.value = index;
@@ -159,6 +234,7 @@ class ProfileController extends GetxController {
   }
 
   void resetData() {
+    cancelEditMode();
     stopMusic();
     _musicsFetched    = false;
     _toplinesFetched  = false;
@@ -204,6 +280,9 @@ class ProfileController extends GetxController {
   void onClose() {
     _completeSub?.cancel();
     _audio.stop(AudioType.music);
+    stageNameCtrl.dispose();
+    pseudoCtrl.dispose();
+    descriptionCtrl.dispose();
     super.onClose();
   }
 }

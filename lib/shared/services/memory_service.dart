@@ -43,6 +43,9 @@ class MemoryService extends GetxService {
 
     final likedIds = _storage.read<List>('likedMusicIds') ?? [];
     likedMusicIdsObs.assignAll(likedIds.cast<String>());
+
+    final avatarPath = _storage.read<String>('localAvatarPath');
+    if (avatarPath != null) localAvatarPathObs.value = avatarPath;
   }
 
   Future<void> ensureInitialized() async {
@@ -58,14 +61,29 @@ class MemoryService extends GetxService {
 
   // ─── Profil utilisateur ───────────────────────────────────────────────────────
 
+  final localAvatarPathObs = Rx<String?>(null);
+
   UserModel? get currentUser => currentUserObs.value;
 
   void setCurrentUser(UserModel user) {
     currentUserObs.value = user;
+    languageCode = user.language;
   }
 
   void clearCurrentUser() {
     currentUserObs.value = null;
+  }
+
+  String? get localAvatarPath => localAvatarPathObs.value;
+
+  void setLocalAvatarPath(String path) {
+    localAvatarPathObs.value = path;
+    _storage.write('localAvatarPath', path);
+  }
+
+  void clearLocalAvatarPath() {
+    localAvatarPathObs.value = null;
+    _storage.remove('localAvatarPath');
   }
 
   // ─── Toggle like ─────────────────────────────────────────────────────────────

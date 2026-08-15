@@ -43,6 +43,23 @@ class ProfileService extends GetxService {
     return res.isSuccess;
   }
 
+  Future<({UserModel? user, String? error})> updateProfile({
+    String? pseudo,
+    String? stageName,
+    String? description,
+  }) async {
+    final res = await _authApi.updateMe(
+      pseudo: pseudo,
+      stageName: stageName,
+      description: description,
+    );
+    if (res.isSuccess && res.data != null) {
+      MemoryService.instance.setCurrentUser(res.data!);
+      return (user: res.data, error: null);
+    }
+    return (user: null, error: res.errorMessage ?? 'Une erreur est survenue');
+  }
+
   ({List<MusicModel> published, List<MusicModel> drafts}) _splitByStatus(
       List<MusicModel> musics) {
     final published = <MusicModel>[];

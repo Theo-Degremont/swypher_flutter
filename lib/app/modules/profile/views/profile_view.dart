@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -28,32 +30,54 @@ class ProfileView extends GetView<ProfileController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Obx(() {
-                    final avatarUrl = controller.resolveAvatarUrl(
-                      controller.memory.currentUser?.profilePicture,
-                    );
-                    return Container(
-                      width: 100.w,
-                      height: 100.w,
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.primaryLinearGradientStart,
-                            AppColors.primaryLinearGradientEnd,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                    final isEdit      = controller.isEditMode.value;
+                    final pendingFile = controller.pendingAvatarFile.value;
+                    final localPath   = controller.memory.localAvatarPath;
+
+                    Widget avatarChild;
+                    if (pendingFile != null) {
+                      avatarChild = Image.file(pendingFile, fit: BoxFit.cover);
+                    } else if (localPath != null) {
+                      avatarChild = Image.file(File(localPath), fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => _defaultAvatar());
+                    } else {
+                      avatarChild = _defaultAvatar();
+                    }
+
+                    return GestureDetector(
+                      onTap: isEdit ? controller.pickAvatar : null,
+                      child: Container(
+                        width: 100.w,
+                        height: 100.w,
+                        padding: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.primaryLinearGradientStart,
+                              AppColors.primaryLinearGradientEnd,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                         ),
-                      ),
-                      child: ClipOval(
-                        child: avatarUrl != null
-                            ? Image.network(
-                                avatarUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, _, _) => _defaultAvatar(),
-                              )
-                            : _defaultAvatar(),
+                        child: ClipOval(
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              avatarChild,
+                              if (isEdit)
+                                Container(
+                                  color: Colors.black.withValues(alpha: 0.45),
+                                  child: Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                    size: 28.sp,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   }),
@@ -61,9 +85,18 @@ class ProfileView extends GetView<ProfileController> {
                   SizedBox(height: 16.h),
 
                   Obx(() {
+                    if (controller.isEditMode.value) {
+                      return _ProfileTextField(
+                        controller: controller.stageNameCtrl,
+                        hint: 'Nom de scène',
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w600,
+                        textAlign: TextAlign.center,
+                      );
+                    }
                     final user = controller.memory.currentUser;
                     return Text(
-                      user?.stageName ?? user?.pseudo ?? 'Stage Name',
+                      user?.stageName ?? user?.pseudo ?? '',
                       style: TextStyle(
                         fontSize: 25.sp,
                         fontWeight: FontWeight.w600,
@@ -76,9 +109,19 @@ class ProfileView extends GetView<ProfileController> {
                   SizedBox(height: 10.h),
 
                   Obx(() {
+                    if (controller.isEditMode.value) {
+                      return _ProfileTextField(
+                        controller: controller.pseudoCtrl,
+                        hint: 'Pseudo',
+                        prefix: '@',
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.normal,
+                        textAlign: TextAlign.center,
+                      );
+                    }
                     final pseudo = controller.memory.currentUser?.pseudo;
                     return Text(
-                      pseudo != null ? '@$pseudo' : '@pseudo',
+                      pseudo != null ? '@$pseudo' : '',
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.normal,
@@ -90,25 +133,70 @@ class ProfileView extends GetView<ProfileController> {
 
                   SizedBox(height: 10.h),
 
-                  CustomTextButton(
-                    text: 'Modifier mon profil',
-                    onPressed: () {},
-                    height: 40.h,
-                  ),
+                  Obx(() {
+                    if (!controller.isEditMode.value) return const SizedBox.shrink();
+                    return Padding(
+                      padding: EdgeInsets.only(top: 10.h, bottom: 4.h),
+                      child: _ProfileTextField(
+                        controller: controller.descriptionCtrl,
+                        hint: 'Description',
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.normal,
+                        textAlign: TextAlign.center,
+                        maxLines: 4,
+                      ),
+                    );
+                  }),
 
                   SizedBox(height: 10.h),
 
                   Obx(() {
-                    final desc = controller.memory.currentUser?.description;
-                    if (desc == null || desc.isEmpty)
-                      return const SizedBox.shrink();
+                    final isEdit = controller.isEditMode.value;
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (isEdit)
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 8.h),
+                            child: GestureDetector(
+                              onTap: controller.cancelEditMode,
+                              child: Text(
+                                'Annuler la modification',
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontFamily: AppFonts.montserrat,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.secondaryTextColor
+                                      .withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ),
+                          ),
+                        CustomTextButton(
+                          text: isEdit
+                              ? 'Confirmer la modification'
+                              : 'Modifier mon profil',
+                          isLoading: controller.isSaving.value,
+                          onPressed: isEdit
+                              ? controller.confirmEdit
+                              : controller.enterEditMode,
+                          height: 40.h,
+                        ),
+                      ],
+                    );
+                  }),
+
+                  Obx(() {
+                    if (controller.isEditMode.value) return const SizedBox.shrink();
+                    final description = controller.memory.currentUser?.description;
+                    if (description == null || description.isEmpty) return const SizedBox.shrink();
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 10.h),
+                      padding: EdgeInsets.only(top: 10.h),
                       child: Text(
-                        desc,
+                        description,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.normal,
                           color: AppColors.secondaryTextColor,
                           fontFamily: AppFonts.montserrat,
@@ -383,5 +471,68 @@ class _TrackTile extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+class _ProfileTextField extends StatelessWidget {
+  const _ProfileTextField({
+    required this.controller,
+    required this.hint,
+    required this.fontSize,
+    required this.fontWeight,
+    required this.textAlign,
+    this.prefix,
+    this.maxLines = 1,
+  });
+
+  final TextEditingController controller;
+  final String hint;
+  final String? prefix;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final TextAlign textAlign;
+  final int maxLines;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      maxLines: maxLines,
+      textAlign: textAlign,
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        fontFamily: AppFonts.montserrat,
+        color: AppColors.primaryTextColor,
+      ),
+      decoration: InputDecoration(
+        hintText: hint,
+        prefixText: prefix,
+        prefixStyle: TextStyle(
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          fontFamily: AppFonts.montserrat,
+          color: AppColors.secondaryTextColor,
+        ),
+        hintStyle: TextStyle(
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          fontFamily: AppFonts.montserrat,
+          color: AppColors.secondaryTextColor.withValues(alpha: 0.5),
+        ),
+        isDense: true,
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: BorderSide(
+            color: AppColors.secondaryTextColor.withValues(alpha: 0.2),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: BorderSide(color: AppColors.tertiaryColor, width: 1.5),
+        ),
+      ),
+    );
   }
 }

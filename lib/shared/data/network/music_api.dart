@@ -7,6 +7,7 @@ import 'package:swypher_flutter/shared/data/models/api_response.dart';
 import 'package:swypher_flutter/shared/data/models/comment_model.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/data/network/api_client.dart';
+import 'package:swypher_flutter/shared/services/memory_service.dart';
 
 class MusicApi extends GetxService {
   final ApiClient _client = Get.find<ApiClient>();
@@ -24,7 +25,7 @@ class MusicApi extends GetxService {
     final fields = <String, dynamic>{
       'title': title,
       'status': status,
-      'requestLanguage': 'fr',
+      'requestLanguage': MemoryService.instance.languageCode ?? 'fr',
       'voiceVolume': voiceVolume.toStringAsFixed(2),
       'musicVolume': musicVolume.toStringAsFixed(2),
     };
