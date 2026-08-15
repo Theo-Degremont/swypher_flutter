@@ -10,6 +10,10 @@ abstract class Routes {
   static const UPLOAD_MUSIC = _Paths.UPLOAD_MUSIC;
   static const COMPLETE_MUSIC = _Paths.COMPLETE_MUSIC;
   static const RECORD_MUSIC = _Paths.RECORD_MUSIC;
+  static const SETTINGS = _Paths.SETTINGS;
+  static const UPDATE_PASSWORD = _Paths.UPDATE_PASSWORD;
+  static const CGU = _Paths.CGU;
+  static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
 }
 
 abstract class _Paths {
@@ -21,4 +25,8 @@ abstract class _Paths {
   static const UPLOAD_MUSIC = '/upload-music';
   static const COMPLETE_MUSIC = '/complete-music';
   static const RECORD_MUSIC = '/record-music';
+  static const SETTINGS = '/settings';
+  static const UPDATE_PASSWORD = '/settings/update-password';
+  static const CGU = '/settings/cgu';
+  static const PRIVACY_POLICY = '/settings/privacy-policy';
 }

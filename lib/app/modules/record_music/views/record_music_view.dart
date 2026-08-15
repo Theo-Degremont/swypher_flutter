@@ -37,7 +37,6 @@ class RecordMusicView extends GetView<RecordMusicController> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 spacing: 10.h,
                 children: [
-                  // ─── Topline ─────────────────────────────────────────────
                   Obx(
                     () => UploadButtonWidget(
                       fileName: controller.toplineFile.value?.name,
@@ -51,14 +50,12 @@ class RecordMusicView extends GetView<RecordMusicController> {
                         : ToplineSwypherPickerButtonWidget(onTap: () {}),
                   ),
 
-                  // ─── Zone micro + visualiseur ─────────────────────────────
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       spacing: 10.h,
                       children: [
-                        // Visualiseur — visible pendant l'enregistrement ET quand des barres existent
                         Obx(
                           () => AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),
@@ -72,7 +69,6 @@ class RecordMusicView extends GetView<RecordMusicController> {
                           ),
                         ),
 
-                        // Bouton micro avec anneaux
                         Obx(
                           () => Container(
                             padding: EdgeInsets.all(8.w),
@@ -109,9 +105,6 @@ class RecordMusicView extends GetView<RecordMusicController> {
                             ),
                           ),
                         ),
-
-                        // ─── Sections visibles uniquement si un enregistrement
-                        //     existe ET qu'on n'est PAS en train d'enregistrer ──
                         Obx(
                           () => (controller.recordedVoice.value == null ||
                                   controller.isRecording.value)
@@ -169,7 +162,6 @@ class RecordMusicView extends GetView<RecordMusicController> {
                                             colorIcon: AppColors.primaryColor,
                                           ),
 
-                                          // Supprimer
                                           GestureDetector(
                                             onTap: controller.deleteRecording,
                                             child: Container(
@@ -224,7 +216,6 @@ class RecordMusicView extends GetView<RecordMusicController> {
                     ),
                   ),
 
-                  // ─── Bouton Continuer ──────────────────────────────────────
                   Obx(
                     () => controller.recordedVoice.value == null
                         ? SizedBox.shrink()

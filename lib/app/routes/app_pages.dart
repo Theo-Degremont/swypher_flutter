@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:swypher_flutter/app/modules/settings/views/cgu_view.dart';
+import 'package:swypher_flutter/app/modules/settings/views/privacy_policy_view.dart';
 
 import '../modules/complete_music/bindings/complete_music_binding.dart';
 import '../modules/complete_music/views/complete_music_view.dart';
@@ -10,8 +12,11 @@ import '../modules/record_music/bindings/record_music_binding.dart';
 import '../modules/record_music/views/record_music_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/settings/bindings/settings_binding.dart';
+import '../modules/settings/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/settings/views/update_password_view.dart';
 import '../modules/upload_music/bindings/upload_music_binding.dart';
 import '../modules/upload_music/views/upload_music_view.dart';
 
@@ -69,6 +74,31 @@ class AppPages {
       name: _Paths.RECORD_MUSIC,
       page: () => const RecordMusicView(),
       binding: RecordMusicBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.SETTINGS,
+      page: () => const SettingsView(),
+      binding: SettingsBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.UPDATE_PASSWORD,
+      page: () => const UpdatePasswordView(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.CGU,
+      page: () => const CguView(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.PRIVACY_POLICY,
+      page: () => const PrivacyPolicyView(),
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),
     ),

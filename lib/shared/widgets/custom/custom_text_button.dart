@@ -14,6 +14,10 @@ class CustomTextButton extends StatefulWidget {
     this.isLoading = false,
     this.isEnabled = true,
     this.haveBorder = false,
+    this.showShadow = true,
+    this.icon,
+    this.iconColor,
+    this.textColor,
   });
 
   final VoidCallback? onPressed;
@@ -25,6 +29,10 @@ class CustomTextButton extends StatefulWidget {
   final bool isLoading;
   final bool isEnabled;
   final bool haveBorder;
+  final bool showShadow;
+  final IconData? icon;
+  final Color? iconColor;
+  final Color? textColor;
 
   @override
   State<CustomTextButton> createState() => _CustomTextButtonState();
@@ -69,14 +77,15 @@ class _CustomTextButtonState extends State<CustomTextButton> {
                 end: Alignment.bottomRight,
               ),
               border: widget.haveBorder
-                  ? Border.all(color: AppColors.primaryColor, width: 1.5.w)
+                  ? Border.all(color: AppColors.tertiaryColor, width: 1.5.w)
                   : null,
               boxShadow: [
-                BoxShadow(
-                  color: AppColors.tertiaryColor.withValues(alpha: 0.5),
-                  blurRadius: 15.0,
-                  offset: const Offset(0, 0),
-                ),
+                if (widget.showShadow)
+                  BoxShadow(
+                    color: AppColors.tertiaryColor.withValues(alpha: 0.5),
+                    blurRadius: 15.0,
+                    offset: const Offset(0, 0),
+                  ),
               ],
             ),
             child: widget.isLoading
@@ -90,15 +99,29 @@ class _CustomTextButtonState extends State<CustomTextButton> {
                       ),
                     ),
                   )
-                : Text(
-                    widget.text.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                      color: AppColors.secondaryColor,
-                    ),
+                : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (widget.icon != null) ...[
+                        SizedBox(width: 16.w),
+                        Icon(
+                          widget.icon,
+                          color: widget.iconColor ?? AppColors.secondaryColor,
+                          size: 20.sp,
+                        ),
+                        SizedBox(width: 8.w),
+                      ],
+                      Text(
+                        widget.text.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
+                          color: widget.textColor ?? AppColors.secondaryColor,
+                        ),
+                      ),
+                    ],
                   ),
           ),
         ),
