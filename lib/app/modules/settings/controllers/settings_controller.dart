@@ -203,4 +203,12 @@ class SettingsController extends GetxController {
   void goToUpdatePassword() {
     Get.toNamed(Routes.UPDATE_PASSWORD);
   }
+
+  void goToCgu() {
+    Get.toNamed(Routes.CGU);
+  }
+
+  void goToPrivacyPolicy() {
+    Get.toNamed(Routes.PRIVACY_POLICY);
+  }
 }

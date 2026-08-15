@@ -106,7 +106,6 @@ class SettingsView extends GetView<SettingsController> {
               SizedBox(height: 20.h),
             ],
 
-            // ── Bloc Preferences ─────────────────────────────────────────────
             _SectionLabel('Preferences'),
             SizedBox(height: 8.h),
             _SettingsCard(children: [
@@ -142,7 +141,6 @@ class SettingsView extends GetView<SettingsController> {
 
               _Divider(),
 
-              // Langue (expandable)
               Obx(() {
                 final expanded = controller.languageExpanded.value;
                 return Column(
@@ -180,7 +178,6 @@ class SettingsView extends GetView<SettingsController> {
             ]),
             SizedBox(height: 20.h),
 
-            // ── Bloc Privacy & CGU ────────────────────────────────────────────
             _SectionLabel('Privacy & CGU'),
             SizedBox(height: 8.h),
             _SettingsCard(children: [
@@ -188,19 +185,18 @@ class SettingsView extends GetView<SettingsController> {
                 icon: Icons.privacy_tip_sharp,
                 label: 'Politique de confidentialité',
                 trailing: Icon(Icons.arrow_forward_ios, color: AppColors.secondaryTextColor, size: 16.sp),
-                onTap: () {},
+                onTap: () => controller.goToPrivacyPolicy(),
               ),
               _Divider(),
               _SettingsRow(
                 icon: Icons.security_sharp,
                 label: 'CGU',
                 trailing: Icon(Icons.arrow_forward_ios, color: AppColors.secondaryTextColor, size: 16.sp),
-                onTap: () {},
+                onTap: () => controller.goToCgu(),
               ),
             ]),
             SizedBox(height: 20.h),
 
-            // ── Bloc Support ─────────────────────────────────────────────────
             _SectionLabel('Support'),
             SizedBox(height: 8.h),
             _SettingsCard(children: [
@@ -237,7 +233,6 @@ class SettingsView extends GetView<SettingsController> {
               ),
             ]),
 
-            // ── Boutons connecté uniquement ───────────────────────────────────
             if (isLoggedIn) ...[
               SizedBox(height: 20.h),
               Obx(() => CustomTextButton(
@@ -277,8 +272,6 @@ class SettingsView extends GetView<SettingsController> {
     );
   }
 }
-
-// ─── Widgets utilitaires internes ─────────────────────────────────────────────
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel(this.text);

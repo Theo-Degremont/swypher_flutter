@@ -33,7 +33,7 @@ class UpdatePasswordView extends GetView<SettingsController> {
                   bottom: 16.h,
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       'Modifier le mot de passe',

@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:swypher_flutter/app/modules/settings/views/cgu_view.dart';
+import 'package:swypher_flutter/app/modules/settings/views/privacy_policy_view.dart';
 
 import '../modules/complete_music/bindings/complete_music_binding.dart';
 import '../modules/complete_music/views/complete_music_view.dart';
@@ -85,6 +87,18 @@ class AppPages {
     GetPage(
       name: _Paths.UPDATE_PASSWORD,
       page: () => const UpdatePasswordView(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.CGU,
+      page: () => const CguView(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.PRIVACY_POLICY,
+      page: () => const PrivacyPolicyView(),
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),
     ),
