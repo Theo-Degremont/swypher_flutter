@@ -55,6 +55,10 @@ class AuthApi extends GetxService {
         fromData: (data) => UserModel.fromJson(data as Map<String, dynamic>),
       );
 
+  /// Supprime le compte de l'utilisateur connecté (DELETE /user/me).
+  Future<ApiResponse<void>> deleteMe() =>
+      _client.delete<void>(ApiConfiguration.mePath, requiresAuth: true);
+
   Future<ApiResponse<UserModel>> updateMe({
     String? pseudo,
     String? stageName,

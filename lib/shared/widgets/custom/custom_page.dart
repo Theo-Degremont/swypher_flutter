@@ -13,6 +13,7 @@ class CustomPage extends StatelessWidget {
     super.key,
     this.showBackButton = false,
     this.showNavBar = true,
+    this.showBottomListenMusic = true,
     this.resizeToAvoidBottomInset = false,
     required this.body,
     required this.mainController,
@@ -20,6 +21,7 @@ class CustomPage extends StatelessWidget {
 
   final bool showBackButton;
   final bool showNavBar;
+  final bool showBottomListenMusic;
   final bool resizeToAvoidBottomInset;
   final Widget body;
   final MainController mainController;
@@ -32,7 +34,10 @@ class CustomPage extends StatelessWidget {
         children: [
           Expanded(
             flex: 12,
-            child: CustomAppBar(showBackButton: showBackButton),
+            child: CustomAppBar(
+              showBackButton: showBackButton,
+              showSettingsButton: showNavBar,
+            ),
           ),
           Expanded(
             flex: showNavBar ? 78 : 88,
@@ -47,7 +52,6 @@ class CustomPage extends StatelessWidget {
                     height: 400.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      // color: AppColors.whiteColor,
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.primaryColor.withValues(alpha: 0.1),
@@ -65,7 +69,6 @@ class CustomPage extends StatelessWidget {
                     height: 400.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      // color: AppColors.whiteColor,
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.primaryColor.withValues(alpha: 0.1),
@@ -76,20 +79,23 @@ class CustomPage extends StatelessWidget {
                   ),
                 ),
                 body,
-                Obx(() {
-                  final tab = mainController.currentIndex.value;
-                  final music = AudioService.to.currentMusicObs.value;
-                  if (music == null || tab == 0 || tab == 4) return const SizedBox.shrink();
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: BottomListenMusicWidget(
-                      music: music,
-                      coverUrl: AudioService.to.currentCoverUrlObs.value,
-                      onTogglePlay: AudioService.to.toggleMusicPlay,
-                      formatDuration: AudioService.formatDuration,
-                    ),
-                  );
-                }),
+                if (showBottomListenMusic)
+                  Obx(() {
+                    final tab = mainController.currentIndex.value;
+                    final music = AudioService.to.currentMusicObs.value;
+                    if (music == null || tab == 0 || tab == 4) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: BottomListenMusicWidget(
+                        music: music,
+                        coverUrl: AudioService.to.currentCoverUrlObs.value,
+                        onTogglePlay: AudioService.to.toggleMusicPlay,
+                        formatDuration: AudioService.formatDuration,
+                      ),
+                    );
+                  }),
               ],
             ),
           ),

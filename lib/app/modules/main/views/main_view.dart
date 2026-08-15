@@ -17,6 +17,7 @@ class MainView extends GetView<MainController> {
       showBackButton: false,
       showNavBar: true,
       mainController: controller,
+      showBottomListenMusic: true,
       body: Obx(
               () => IndexedStack(
                 index: controller.currentIndex.value,

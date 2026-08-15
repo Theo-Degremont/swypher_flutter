@@ -96,8 +96,6 @@ class _SpinningDiscState extends State<_SpinningDisc>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-
 class MusicCardWidget extends StatelessWidget {
   const MusicCardWidget({super.key, required this.music});
 
@@ -123,7 +121,6 @@ class MusicCardWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // ─── Pochette ───────────────────────────────────────────────────────
           Container(
             width: 280.w,
             height: 280.w,
@@ -284,7 +281,6 @@ class MusicCardWidget extends StatelessWidget {
 
           SizedBox(height: 16.h),
 
-          // ─── Titre ─────────────────────────────────────────────────────────
           Text(
             music.title,
             style: TextStyle(
@@ -298,7 +294,6 @@ class MusicCardWidget extends StatelessWidget {
 
           SizedBox(height: 8.h),
 
-          // ─── Artiste ───────────────────────────────────────────────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -340,7 +335,6 @@ class MusicCardWidget extends StatelessWidget {
 
           SizedBox(height: 16.h),
 
-          // ─── Barre de progression ───────────────────────────────────────────
           ProgressionBarWidget(
             position: audio.positionRx(AudioType.music),
             duration: audio.durationRx(AudioType.music),
@@ -348,7 +342,6 @@ class MusicCardWidget extends StatelessWidget {
 
           SizedBox(height: 16.h),
 
-          // ─── Boutons ────────────────────────────────────────────────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

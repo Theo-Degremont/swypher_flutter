@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:swypher_flutter/app/routes/app_pages.dart';
 import 'package:swypher_flutter/shared/constants/constants.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
 
@@ -8,9 +9,11 @@ class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     super.key,
     this.showBackButton = false,
+    this.showSettingsButton = true,
   });
 
   final bool showBackButton;
+  final bool showSettingsButton;
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +58,11 @@ class CustomAppBar extends StatelessWidget {
             ),
           ),
           CustomIconButton(
-            onPressed: null,
-            icon: Icons.notifications_none,
-            iconColor: AppColors.tertiaryColor,
+            onPressed: showSettingsButton ? () {
+              Get.toNamed(Routes.SETTINGS);  // Handle notification button press
+            } : null,
+            icon: Icons.settings_sharp,
+            iconColor: showSettingsButton ? AppColors.tertiaryColor : Colors.transparent,
           ),
         ],
       ),

@@ -4,20 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swypher_flutter/shared/data/models/auth_model.dart';
 
 class MemoryService extends GetxService {
-  late final RxBool hasTruffleObs = RxBool(false);
-
-  // ─── Utilisateur courant ──────────────────────────────────────────────────────
-  /// Profil de l'utilisateur connecté, null si non chargé ou non connecté.
   final currentUserObs = Rx<UserModel?>(null);
 
-  // ─── Like / Dislike ──────────────────────────────────────────────────────────
   final musicLikedObs    = <String>[].obs;
   final musicDislikedObs = <String>[].obs;
 
-  /// IDs des musiques réellement likées (pour l'affichage du cœur).
   final likedMusicIdsObs = <String>[].obs;
 
-  // ─── Repost ──────────────────────────────────────────────────────────────────
   final musicRepostedObs = <String>[].obs;
 
   static final MemoryService _mInstance = MemoryService._();
@@ -54,12 +47,9 @@ class MemoryService extends GetxService {
     }
   }
 
-  // ─── Getters ─────────────────────────────────────────────────────────────────
 
   List<String> get musicLiked    => List.unmodifiable(musicLikedObs);
   List<String> get musicDisliked => List.unmodifiable(musicDislikedObs);
-
-  // ─── Profil utilisateur ───────────────────────────────────────────────────────
 
   final localAvatarPathObs = Rx<String?>(null);
 
@@ -86,7 +76,6 @@ class MemoryService extends GetxService {
     _storage.remove('localAvatarPath');
   }
 
-  // ─── Toggle like ─────────────────────────────────────────────────────────────
 
   void toggleLike(String musicId) {
     if (musicLikedObs.contains(musicId)) {
@@ -113,7 +102,6 @@ class MemoryService extends GetxService {
     _storage.write('likedMusicIds', likedMusicIdsObs.toList());
   }
 
-  // ─── Repost ──────────────────────────────────────────────────────────────────
 
   void addRepost(String musicId) {
     if (musicRepostedObs.contains(musicId)) return;
@@ -121,7 +109,6 @@ class MemoryService extends GetxService {
     _storage.write('musicReposted', musicRepostedObs.toList());
   }
 
-  // ─── Clear après sync API ────────────────────────────────────────────────────
 
   void clearLiked() {
     musicLikedObs.clear();
@@ -131,6 +118,24 @@ class MemoryService extends GetxService {
   void clearDisliked() {
     musicDislikedObs.clear();
     _storage.remove('musicDisliked');
+  }
+
+  void clearRepost() {
+    musicRepostedObs.clear();
+    _storage.remove('musicReposted');
+  }
+
+  /// Vide toutes les données de session (déconnexion / suppression de compte).
+  void clearSessionData() {
+    access  = null;
+    refresh = null;
+    clearCurrentUser();
+    clearLocalAvatarPath();
+    clearLiked();
+    clearDisliked();
+    clearRepost();
+    likedMusicIdsObs.clear();
+    _storage.write('likedMusicIds', <String>[]);
   }
 
   String? get access {
