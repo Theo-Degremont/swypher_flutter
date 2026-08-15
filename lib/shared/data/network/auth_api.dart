@@ -46,4 +46,12 @@ class AuthApi extends GetxService {
         body: {'refreshToken': refreshToken},
         fromData: (data) => RefreshData.fromJson(data as Map<String, dynamic>),
       );
+
+  /// Récupère le profil de l'utilisateur connecté (GET /user/me).
+  Future<ApiResponse<UserModel>> getMe() =>
+      _client.get<UserModel>(
+        ApiConfiguration.mePath,
+        requiresAuth: true,
+        fromData: (data) => UserModel.fromJson(data as Map<String, dynamic>),
+      );
 }

@@ -166,4 +166,37 @@ class MusicApi extends GetxService {
         return 'audio/mpeg';
     }
   }
+
+  Future<ApiResponse<void>> deleteMusic(String musicId) =>
+      _client.delete<void>(
+        '${ApiConfiguration.musicPath}/$musicId',
+        requiresAuth: true,
+      );
+
+  Future<ApiResponse<List<MusicModel>>> getUserMusics(String userId) =>
+      _client.get<List<MusicModel>>(
+        '${ApiConfiguration.musicUserPath}/$userId',
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  Future<ApiResponse<List<MusicModel>>> getUserToplines(String userId) =>
+      _client.get<List<MusicModel>>(
+        '${ApiConfiguration.toplineUserPath}/$userId',
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+
+  Future<ApiResponse<List<MusicModel>>> getUserReposts(String userId) =>
+      _client.get<List<MusicModel>>(
+        '${ApiConfiguration.repostUserPath}/$userId',
+        requiresAuth: true,
+        fromData: (data) => (data as List)
+            .map((e) => MusicModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
 }

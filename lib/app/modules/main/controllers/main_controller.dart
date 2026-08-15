@@ -48,6 +48,11 @@ class MainController extends GetxController {
       library.stopMusic();
     }
 
+    // Stoppe la musique profile quand on quitte l'onglet profile.
+    if (currentIndex.value == 3 && index != 3) {
+      profile.resetData();
+    }
+
     // Rafraîchit la library quand on arrive sur l'onglet.
     if (index == 2) {
       library.reloadLiked();

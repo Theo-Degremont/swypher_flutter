@@ -171,7 +171,7 @@ class LibraryView extends GetView<LibraryController> {
                       children: controller.likedMusics
                           .asMap()
                           .entries
-                          .map((e) => _TrackTile(index: e.key))
+                          .map((e) => _TrackTile(index: e.key, ctrl: controller))
                           .toList(),
                     );
                   }),
@@ -201,13 +201,13 @@ class LibraryView extends GetView<LibraryController> {
 // ─── Tuile de piste ──────────────────────────────────────────────────────────
 
 class _TrackTile extends StatelessWidget {
-  const _TrackTile({required this.index});
+  const _TrackTile({required this.index, required this.ctrl});
 
   final int index;
+  final LibraryController ctrl;
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.find<LibraryController>();
 
     return Obx(() {
       final isActive = ctrl.currentIndex.value == index;
