@@ -16,7 +16,7 @@ class MainController extends GetxController {
   static const _protectedIndices = {2, 3, 4};
 
   late final HomeController home;
-  late final SearchPageController search;
+  late final SearchController search;
   late final LibraryController library;
   late final ProfileController profile;
   late final MusicStudioController record;
@@ -27,7 +27,7 @@ class MainController extends GetxController {
     isLoggedIn.value = MemoryService.instance.access != null;
 
     home    = Get.find<HomeController>();
-    search  = Get.find<SearchPageController>();
+    search  = Get.find<SearchController>();
     library = Get.find<LibraryController>();
     profile = Get.find<ProfileController>();
     record  = Get.find<MusicStudioController>();

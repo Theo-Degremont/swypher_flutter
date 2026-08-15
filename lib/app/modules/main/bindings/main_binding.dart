@@ -6,6 +6,7 @@ import 'package:swypher_flutter/app/modules/profile/controllers/profile_controll
 import 'package:swypher_flutter/app/modules/music_studio/controllers/music_studio_controller.dart';
 import 'package:swypher_flutter/app/modules/profile/services/profile_service.dart';
 import 'package:swypher_flutter/app/modules/search/controllers/search_controller.dart';
+import 'package:swypher_flutter/app/modules/search/services/search_service.dart';
 import 'package:swypher_flutter/shared/data/network/music_api.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
 import '../controllers/main_controller.dart';
@@ -19,7 +20,8 @@ class MainBinding extends Bindings {
 
     // Sous-contrôleurs enregistrés en premier (MainController en dépend)
     Get.put<HomeController>(HomeController());
-    Get.put<SearchPageController>(SearchPageController());
+    Get.put<SearchService>(SearchService());
+    Get.put<SearchController>(SearchController());
     Get.put<LibraryService>(LibraryService());
     Get.put<LibraryController>(LibraryController());
     Get.put<ProfileService>(ProfileService());
