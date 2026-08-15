@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/main/controllers/main_controller.dart';
 import 'package:swypher_flutter/shared/constants/constants.dart';
+import 'package:swypher_flutter/shared/services/audio_service.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_app_bar.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_nav_bar.dart';
+import 'package:swypher_flutter/shared/widgets/widgets/bottom_listen_music_widget.dart';
 
 class CustomPage extends StatelessWidget {
   const CustomPage({
@@ -74,6 +76,20 @@ class CustomPage extends StatelessWidget {
                   ),
                 ),
                 body,
+                Obx(() {
+                  final tab = mainController.currentIndex.value;
+                  final music = AudioService.to.currentMusicObs.value;
+                  if (music == null || tab == 0 || tab == 4) return const SizedBox.shrink();
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: BottomListenMusicWidget(
+                      music: music,
+                      coverUrl: AudioService.to.currentCoverUrlObs.value,
+                      onTogglePlay: AudioService.to.toggleMusicPlay,
+                      formatDuration: AudioService.formatDuration,
+                    ),
+                  );
+                }),
               ],
             ),
           ),

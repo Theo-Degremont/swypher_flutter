@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audio_session/audio_session.dart';
+import 'package:audioplayers/audioplayers.dart' hide AVAudioSessionCategory, AVAudioSessionOptions;
 import 'package:get/get.dart';
+import 'package:swypher_flutter/shared/data/models/music_model.dart';
 
 // ─── Type d'audio ─────────────────────────────────────────────────────────────
 
@@ -52,14 +54,10 @@ class _AudioTrack {
 // ─── AudioService ─────────────────────────────────────────────────────────────
 
 /// Service audio global, disponible partout via [AudioService.to].
-///
-/// Trois types de pistes indépendantes : [AudioType.voice], [AudioType.music],
-/// [AudioType.topline]. Chaque piste a son propre player, volume et état réactif.
 class AudioService extends GetxService {
 
   static AudioService get to => Get.find<AudioService>();
 
-  /// Appelé dans [configureApp] pour initialiser le service.
   static Future<AudioService> initialize() async {
     return Get.put(AudioService());
   }
@@ -67,6 +65,14 @@ class AudioService extends GetxService {
   // ─── Pistes ─────────────────────────────────────────────────────────────────
 
   late final Map<AudioType, _AudioTrack> _tracks;
+
+  // ─── Musique en cours (état global partagé entre les pages) ─────────────────
+
+  final currentMusicObs    = Rx<MusicModel?>(null);
+  final currentCoverUrlObs = Rx<String?>(null);
+
+  /// Abonnement unique à la fin de piste music — remplace tout précédent.
+  StreamSubscription<void>? _musicCompleteSub;
 
   @override
   void onInit() {
@@ -77,14 +83,74 @@ class AudioService extends GetxService {
       AudioType.topline: _AudioTrack(),
       AudioType.record:  _AudioTrack(),
     };
+    _configureAudioSession();
+  }
+
+  Future<void> _configureAudioSession() async {
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playback,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.mixWithOthers,
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+      avAudioSessionRouteSharingPolicy:
+          AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.music,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.media,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
+  }
+
+  // ─── Now playing ─────────────────────────────────────────────────────────────
+
+  void setCurrentMusic(MusicModel music, String? coverUrl) {
+    currentMusicObs.value    = music;
+    currentCoverUrlObs.value = coverUrl;
+  }
+
+  void clearCurrentMusic() {
+    currentMusicObs.value    = null;
+    currentCoverUrlObs.value = null;
+  }
+
+  /// Bascule play/pause sur la piste music sans changer de source.
+  void toggleMusicPlay() {
+    if (isPlayingRx(AudioType.music).value) {
+      pause(AudioType.music);
+    } else {
+      resume(AudioType.music);
+    }
+  }
+
+  // ─── Completion listener (unique, géré globalement) ──────────────────────────
+
+  /// Remplace tout listener précédent par [callback] déclenché à la fin de piste.
+  void listenToMusicComplete(void Function() callback) {
+    _musicCompleteSub?.cancel();
+    _musicCompleteSub = _tracks[AudioType.music]!.player.onPlayerComplete
+        .listen((_) => callback());
+  }
+
+  void cancelMusicCompleteListener() {
+    _musicCompleteSub?.cancel();
+    _musicCompleteSub = null;
+  }
+
+  // ─── Utilitaire de durée ─────────────────────────────────────────────────────
+
+  static String formatDuration(int? seconds) {
+    if (seconds == null || seconds == 0) return '';
+    final m = seconds ~/ 60;
+    final s = seconds % 60;
+    return '$m:${s.toString().padLeft(2, '0')}';
   }
 
   // ─── Play ────────────────────────────────────────────────────────────────────
 
-  /// Lance la lecture d'une [source] (chemin local ou URL) pour le [type] donné.
-  ///
-  /// [exclusive] : met en pause les autres pistes avant de démarrer.
-  /// [volume]    : volume initial (0.0 → 1.0), par défaut la valeur courante.
   Future<void> play(
     AudioType type,
     String source, {
@@ -95,7 +161,6 @@ class AudioService extends GetxService {
 
     final track = _tracks[type]!;
 
-    // Calcule le volume cible : paramètre explicite ou valeur courante de la piste.
     final targetVolume = volume != null
         ? volume.clamp(0.0, 1.0)
         : track.volume.value;
@@ -106,24 +171,18 @@ class AudioService extends GetxService {
     track.savedPosition = Duration.zero;
 
     final src = _toSource(source);
-    // Stop explicite avant de charger une nouvelle source — évite les erreurs
-    // AVFoundation sur iOS quand le player est déjà en cours de lecture.
     await track.player.stop();
-    // Passe le volume directement à play() — plus fiable que setVolume() + play()
-    // car audioplayers peut réinitialiser son état interne lors du chargement.
     await track.player.play(src, volume: targetVolume);
   }
 
   // ─── Pause ───────────────────────────────────────────────────────────────────
 
-  /// Met en pause la piste [type]. La position est automatiquement sauvegardée.
   Future<void> pause(AudioType type) async {
     await _tracks[type]!.player.pause();
   }
 
   // ─── Resume ──────────────────────────────────────────────────────────────────
 
-  /// Reprend la piste [type] exactement là où elle s'était arrêtée.
   Future<void> resume(AudioType type) async {
     final track = _tracks[type]!;
     if (track.source == null) return;
@@ -132,7 +191,6 @@ class AudioService extends GetxService {
 
   // ─── Restart ─────────────────────────────────────────────────────────────────
 
-  /// Repart depuis le début de la piste [type] sans changer la source.
   Future<void> restart(AudioType type) async {
     final track = _tracks[type]!;
     if (track.source == null) return;
@@ -143,21 +201,18 @@ class AudioService extends GetxService {
 
   // ─── Stop ────────────────────────────────────────────────────────────────────
 
-  /// Stoppe la piste [type] et réinitialise sa position à zéro.
   Future<void> stop(AudioType type) async {
     final track = _tracks[type]!;
     track.savedPosition = Duration.zero;
     await track.player.stop();
   }
 
-  /// Stoppe toutes les pistes sauf [except].
   Future<void> stopOthers(AudioType except) async {
     for (final entry in _tracks.entries) {
       if (entry.key != except) await stop(entry.key);
     }
   }
 
-  /// Stoppe toutes les pistes.
   Future<void> stopAll() async {
     for (final type in _tracks.keys) {
       await stop(type);
@@ -166,7 +221,6 @@ class AudioService extends GetxService {
 
   // ─── Volume ──────────────────────────────────────────────────────────────────
 
-  /// Définit le volume de la piste [type] (0.0 → 1.0).
   Future<void> setVolume(AudioType type, double volume) async {
     final clamped = volume.clamp(0.0, 1.0);
     final track = _tracks[type]!;
@@ -176,44 +230,29 @@ class AudioService extends GetxService {
 
   // ─── État réactif ────────────────────────────────────────────────────────────
 
-  /// Indique si la piste [type] est en cours de lecture.
   RxBool isPlayingRx(AudioType type) => _tracks[type]!.isPlaying;
-
-  /// Position courante de la piste [type].
   Rx<Duration> positionRx(AudioType type) => _tracks[type]!.position;
-
-  /// Durée totale de la piste [type] (disponible après chargement).
   Rx<Duration> durationRx(AudioType type) => _tracks[type]!.duration;
-
-  /// Volume réactif de la piste [type].
   RxDouble volumeRx(AudioType type) => _tracks[type]!.volume;
-
-  /// Source actuellement chargée pour [type], ou null si aucune.
   String? currentSource(AudioType type) => _tracks[type]!.source;
-
-  /// Vrai si au moins une piste est en lecture.
-  bool get isAnyPlaying =>
-      _tracks.values.any((t) => t.isPlaying.value);
+  bool get isAnyPlaying => _tracks.values.any((t) => t.isPlaying.value);
 
   // ─── Seek ────────────────────────────────────────────────────────────────────
 
-  /// Déplace la lecture de la piste [type] à la position [position].
   Future<void> seek(AudioType type, Duration position) async {
     await _tracks[type]!.player.seek(position);
   }
 
   // ─── Préchargement ───────────────────────────────────────────────────────────
 
-  /// Charge la source sans démarrer la lecture (utile pour récupérer la durée).
   Future<void> preload(AudioType type, String source) async {
     final track = _tracks[type]!;
     track.source = source;
     await track.player.setSource(_toSource(source));
   }
 
-  // ─── Événement de fin ────────────────────────────────────────────────────────
+  // ─── Événement de fin (stream brut, usage interne) ───────────────────────────
 
-  /// Stream émis quand la piste [type] se termine naturellement.
   Stream<void> onComplete(AudioType type) =>
       _tracks[type]!.player.onPlayerComplete;
 
@@ -236,6 +275,7 @@ class AudioService extends GetxService {
 
   @override
   void onClose() async {
+    _musicCompleteSub?.cancel();
     for (final track in _tracks.values) {
       await track.dispose();
     }

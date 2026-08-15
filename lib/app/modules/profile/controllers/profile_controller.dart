@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -26,7 +25,6 @@ class ProfileController extends GetxController {
   final draftMusics     = <MusicModel>[].obs;
 
   final currentIndex = (-1).obs;
-  StreamSubscription? _completeSub;
 
   // ─── Edit mode ───────────────────────────────────────────────────────────────
   final isEditMode       = false.obs;
@@ -104,8 +102,6 @@ class ProfileController extends GetxController {
   Future<void> selectTab(int tab) async {
     selectedTab.value = tab;
     currentIndex.value = -1;
-    _completeSub?.cancel();
-    _audio.stop(AudioType.music);
 
     switch (tab) {
       case 1:
@@ -133,6 +129,11 @@ class ProfileController extends GetxController {
   // ─── Edit mode ───────────────────────────────────────────────────────────────
 
   void enterEditMode() {
+    _audio.stop(AudioType.music);
+    _audio.clearCurrentMusic();
+    _audio.cancelMusicCompleteListener();
+    currentIndex.value = -1;
+
     final user = _memory.currentUser;
     stageNameCtrl.text   = user?.stageName ?? user?.pseudo ?? '';
     pseudoCtrl.text      = user?.pseudo ?? '';
@@ -192,14 +193,16 @@ class ProfileController extends GetxController {
     final list = activeList;
     if (index < 0 || index >= list.length) return;
     currentIndex.value = index;
-    _completeSub?.cancel();
-    _audio.play(AudioType.music, _resolveUrl(list[index].audioFile));
-    _completeSub = _audio.onComplete(AudioType.music).listen((_) {
+    final music = list[index];
+    _audio.play(AudioType.music, _resolveUrl(music.audioFile));
+    _audio.setCurrentMusic(music, resolveCoverUrl(music.coverImage));
+    _audio.listenToMusicComplete(() {
       final next = currentIndex.value + 1;
       if (next < activeList.length) {
         playAt(next);
       } else {
         currentIndex.value = -1;
+        _audio.clearCurrentMusic();
       }
     });
   }
@@ -217,8 +220,9 @@ class ProfileController extends GetxController {
   }
 
   void stopMusic() {
-    _completeSub?.cancel();
     _audio.stop(AudioType.music);
+    _audio.clearCurrentMusic();
+    _audio.cancelMusicCompleteListener();
     currentIndex.value = -1;
   }
 
@@ -235,7 +239,7 @@ class ProfileController extends GetxController {
 
   void resetData() {
     cancelEditMode();
-    stopMusic();
+    currentIndex.value = -1;
     _musicsFetched    = false;
     _toplinesFetched  = false;
     _repostsFetched   = false;
@@ -278,8 +282,6 @@ class ProfileController extends GetxController {
 
   @override
   void onClose() {
-    _completeSub?.cancel();
-    _audio.stop(AudioType.music);
     stageNameCtrl.dispose();
     pseudoCtrl.dispose();
     descriptionCtrl.dispose();

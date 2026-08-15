@@ -180,18 +180,6 @@ class LibraryView extends GetView<LibraryController> {
             ],
           ),
 
-          // ─── Mini-player bas ─────────────────────────────────────────────
-          Obx(() {
-            final idx = controller.currentIndex.value;
-            if (idx < 0) return const SizedBox.shrink();
-            final music = controller.likedMusics[idx];
-            return BottomListenMusicWidget(
-              music: music,
-              coverUrl: controller.resolveCoverUrl(music.coverImage),
-              onTogglePlay: controller.togglePlay,
-              formatDuration: controller.formatDuration,
-            );
-          }),
         ],
       ),
     );

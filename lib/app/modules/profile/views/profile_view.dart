@@ -312,18 +312,6 @@ class ProfileView extends GetView<ProfileController> {
             ],
           ),
 
-          Obx(() {
-            final idx = controller.currentIndex.value;
-            if (idx < 0 || idx >= controller.activeList.length)
-              return const SizedBox.shrink();
-            final music = controller.activeList[idx];
-            return BottomListenMusicWidget(
-              music: music,
-              coverUrl: controller.resolveCoverUrl(music.coverImage),
-              onTogglePlay: controller.togglePlay,
-              formatDuration: controller.formatDuration,
-            );
-          }),
         ],
       ),
     );

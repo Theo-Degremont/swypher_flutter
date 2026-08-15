@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/library/services/library_service.dart';
 import 'package:swypher_flutter/shared/data/config/api_configuration.dart';
@@ -15,10 +13,8 @@ class LibraryController extends GetxController {
   final likedMusics  = <MusicModel>[].obs;
   final isLoading    = false.obs;
 
-  /// Index de la piste en lecture. -1 = aucune.
+  /// Index de la piste en lecture dans cette vue. -1 = aucune.
   final currentIndex = (-1).obs;
-
-  StreamSubscription? _completeSub;
 
   @override
   void onInit() {
@@ -54,14 +50,16 @@ class LibraryController extends GetxController {
   void playAt(int index) {
     if (index < 0 || index >= likedMusics.length) return;
     currentIndex.value = index;
-    _completeSub?.cancel();
-    _audio.play(AudioType.music, _resolveUrl(likedMusics[index].audioFile));
-    _completeSub = _audio.onComplete(AudioType.music).listen((_) {
+    final music = likedMusics[index];
+    _audio.play(AudioType.music, _resolveUrl(music.audioFile));
+    _audio.setCurrentMusic(music, resolveCoverUrl(music.coverImage));
+    _audio.listenToMusicComplete(() {
       final next = currentIndex.value + 1;
       if (next < likedMusics.length) {
         playAt(next);
       } else {
         currentIndex.value = -1;
+        _audio.clearCurrentMusic();
       }
     });
   }
@@ -76,13 +74,6 @@ class LibraryController extends GetxController {
         playAt(0);
       }
     }
-  }
-
-  /// Appelé par MainController quand on quitte l'onglet library.
-  void stopMusic() {
-    _completeSub?.cancel();
-    _audio.stop(AudioType.music);
-    currentIndex.value = -1;
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -107,7 +98,7 @@ class LibraryController extends GetxController {
     if (total == 0) return '';
     final h = total ~/ 3600;
     final m = (total % 3600) ~/ 60;
-    return h > 0 ? '${h}h ${m}m' : '${m} min';
+    return h > 0 ? '${h}h ${m}m' : '$m min';
   }
 
   String _resolveUrl(String audioFile) {
@@ -116,6 +107,6 @@ class LibraryController extends GetxController {
     }
     final base = ApiConfiguration.baseUrl;
     final path = audioFile.startsWith('/') ? audioFile : '/$audioFile';
-    return '$base$path'; // ignore: unnecessary_brace_in_string_interps
+    return '$base$path';
   }
 }
