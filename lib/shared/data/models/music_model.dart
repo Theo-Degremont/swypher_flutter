@@ -36,7 +36,8 @@ class MusicModel {
     final beatmaker = json['beatmaker'] as Map<String, dynamic>?;
     final user = json['user'] as Map<String, dynamic>?;
     final beatmakerName =
-        (beatmaker?['username'] ?? beatmaker?['name'] ?? user?['username'] ?? user?['name'])
+        (beatmaker?['pseudo'] ?? beatmaker?['username'] ?? beatmaker?['name'] ??
+         user?['pseudo'] ?? user?['username'] ?? user?['name'])
             as String?;
 
     return MusicModel(

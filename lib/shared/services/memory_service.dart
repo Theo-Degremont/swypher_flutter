@@ -11,7 +11,8 @@ class MemoryService extends GetxService {
 
   final likedMusicIdsObs = <String>[].obs;
 
-  final musicRepostedObs = <String>[].obs;
+  final musicRepostedObs   = <String>[].obs;
+  final searchHistoryObs   = <String>[].obs;
 
   static final MemoryService _mInstance = MemoryService._();
   static MemoryService get instance => _mInstance;
@@ -30,9 +31,11 @@ class MemoryService extends GetxService {
     final liked     = _storage.read<List>('musicLiked')     ?? [];
     final disliked  = _storage.read<List>('musicDisliked')  ?? [];
     final reposted  = _storage.read<List>('musicReposted')  ?? [];
+    final history   = _storage.read<List>('searchHistory')  ?? [];
     musicLikedObs.assignAll(liked.cast<String>());
     musicDislikedObs.assignAll(disliked.cast<String>());
     musicRepostedObs.assignAll(reposted.cast<String>());
+    searchHistoryObs.assignAll(history.cast<String>());
 
     final likedIds = _storage.read<List>('likedMusicIds') ?? [];
     likedMusicIdsObs.assignAll(likedIds.cast<String>());
@@ -123,6 +126,23 @@ class MemoryService extends GetxService {
   void clearRepost() {
     musicRepostedObs.clear();
     _storage.remove('musicReposted');
+  }
+
+  void addSearchHistory(String title) {
+    searchHistoryObs.remove(title);
+    searchHistoryObs.insert(0, title);
+    if (searchHistoryObs.length > 20) searchHistoryObs.removeLast();
+    _storage.write('searchHistory', searchHistoryObs.toList());
+  }
+
+  void removeSearchHistoryEntry(String title) {
+    searchHistoryObs.remove(title);
+    _storage.write('searchHistory', searchHistoryObs.toList());
+  }
+
+  void clearSearchHistory() {
+    searchHistoryObs.clear();
+    _storage.remove('searchHistory');
   }
 
   /// Vide toutes les données de session (déconnexion / suppression de compte).
