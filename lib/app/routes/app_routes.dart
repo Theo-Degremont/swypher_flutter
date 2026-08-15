@@ -11,6 +11,7 @@ abstract class Routes {
   static const COMPLETE_MUSIC = _Paths.COMPLETE_MUSIC;
   static const RECORD_MUSIC = _Paths.RECORD_MUSIC;
   static const SETTINGS = _Paths.SETTINGS;
+  static const UPDATE_PASSWORD = _Paths.UPDATE_PASSWORD;
 }
 
 abstract class _Paths {
@@ -23,4 +24,5 @@ abstract class _Paths {
   static const COMPLETE_MUSIC = '/complete-music';
   static const RECORD_MUSIC = '/record-music';
   static const SETTINGS = '/settings';
+  static const UPDATE_PASSWORD = '/settings/update-password';
 }

@@ -14,6 +14,7 @@ import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/settings/views/update_password_view.dart';
 import '../modules/upload_music/bindings/upload_music_binding.dart';
 import '../modules/upload_music/views/upload_music_view.dart';
 
@@ -78,6 +79,12 @@ class AppPages {
       name: _Paths.SETTINGS,
       page: () => const SettingsView(),
       binding: SettingsBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: _Paths.UPDATE_PASSWORD,
+      page: () => const UpdatePasswordView(),
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),
     ),

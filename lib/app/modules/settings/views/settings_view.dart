@@ -19,6 +19,7 @@ class SettingsView extends GetView<SettingsController> {
       showBackButton: true,
       showNavBar: false,
       showBottomListenMusic: false,
+      showSettingsButton: false,
       body: Obx(() {
         final isLoggedIn = controller.isLoggedIn;
         final localPath  = controller.memory.localAvatarPath;
@@ -92,15 +93,14 @@ class SettingsView extends GetView<SettingsController> {
               ),
               SizedBox(height: 20.h),
 
-              // ── Bloc Account (connecté uniquement) ──────────────────────────
               _SectionLabel('Account'),
               SizedBox(height: 8.h),
               _SettingsCard(children: [
                 _SettingsRow(
                   icon: Icons.lock_outline_sharp,
-                  label: 'Change Password',
+                  label: 'Modifier le mot de passe',
                   trailing: Icon(Icons.arrow_forward_ios, color: AppColors.secondaryTextColor, size: 16.sp),
-                  onTap: () {},
+                  onTap: () => controller.goToUpdatePassword(),
                 ),
               ]),
               SizedBox(height: 20.h),

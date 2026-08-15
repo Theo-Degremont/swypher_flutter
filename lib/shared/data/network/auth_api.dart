@@ -55,6 +55,19 @@ class AuthApi extends GetxService {
         fromData: (data) => UserModel.fromJson(data as Map<String, dynamic>),
       );
 
+  /// Met à jour le mot de passe de l'utilisateur (PATCH /user/me).
+  Future<ApiResponse<void>> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) =>
+      _client.patch<void>(
+        ApiConfiguration.mePath,
+        body: {
+          'currentPassword': currentPassword,
+          'password': newPassword,
+        },
+      );
+
   /// Supprime le compte de l'utilisateur connecté (DELETE /user/me).
   Future<ApiResponse<void>> deleteMe() =>
       _client.delete<void>(ApiConfiguration.mePath, requiresAuth: true);

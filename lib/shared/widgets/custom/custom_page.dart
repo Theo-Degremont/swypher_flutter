@@ -17,6 +17,7 @@ class CustomPage extends StatelessWidget {
     this.resizeToAvoidBottomInset = false,
     required this.body,
     required this.mainController,
+    this.showSettingsButton = true,
   });
 
   final bool showBackButton;
@@ -25,6 +26,7 @@ class CustomPage extends StatelessWidget {
   final bool resizeToAvoidBottomInset;
   final Widget body;
   final MainController mainController;
+  final bool showSettingsButton;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class CustomPage extends StatelessWidget {
             flex: 12,
             child: CustomAppBar(
               showBackButton: showBackButton,
-              showSettingsButton: showNavBar,
+              showSettingsButton: showSettingsButton,
             ),
           ),
           Expanded(
