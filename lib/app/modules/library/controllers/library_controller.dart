@@ -51,6 +51,7 @@ class LibraryController extends GetxController {
     if (index < 0 || index >= likedMusics.length) return;
     currentIndex.value = index;
     final music = likedMusics[index];
+    _audio.setQueue(likedMusics.toList(), index);
     _audio.play(AudioType.music, _resolveUrl(music.audioFile));
     _audio.setCurrentMusic(music, resolveCoverUrl(music.coverImage));
     _audio.listenToMusicComplete(() {

@@ -14,6 +14,7 @@ abstract class Routes {
   static const UPDATE_PASSWORD = _Paths.UPDATE_PASSWORD;
   static const CGU = _Paths.CGU;
   static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
+  static const SINGLE_MUSIC = _Paths.SINGLE_MUSIC;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const UPDATE_PASSWORD = '/settings/update-password';
   static const CGU = '/settings/cgu';
   static const PRIVACY_POLICY = '/settings/privacy-policy';
+  static const SINGLE_MUSIC = '/single-music';
 }

@@ -107,6 +107,9 @@ class AudioService extends GetxService {
 
   // ─── Now playing ─────────────────────────────────────────────────────────────
 
+  final currentQueueObs      = <MusicModel>[].obs;
+  final currentQueueIndexObs = (-1).obs;
+
   void setCurrentMusic(MusicModel music, String? coverUrl) {
     currentMusicObs.value    = music;
     currentCoverUrlObs.value = coverUrl;
@@ -115,6 +118,12 @@ class AudioService extends GetxService {
   void clearCurrentMusic() {
     currentMusicObs.value    = null;
     currentCoverUrlObs.value = null;
+  }
+
+  /// Définit la file de lecture courante (liste source + position).
+  void setQueue(List<MusicModel> queue, int index) {
+    currentQueueObs.assignAll(queue);
+    currentQueueIndexObs.value = index;
   }
 
   /// Bascule play/pause sur la piste music sans changer de source.
