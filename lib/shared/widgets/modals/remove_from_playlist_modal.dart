@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/constants/text_keys.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_text_button.dart';
 
@@ -92,7 +93,7 @@ class RemoveFromPlaylistModal extends StatelessWidget {
 
             // ─── Titre ──────────────────────────────────────────────────────
             Text(
-              'Retirer de la playlist ?',
+              tkModalRemovePlaylistTitle.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.primaryTextColor,
@@ -107,7 +108,7 @@ class RemoveFromPlaylistModal extends StatelessWidget {
 
             // ─── Description ────────────────────────────────────────────────
             Text(
-              'Êtes-vous sûr de vouloir enlever "${music.title}" de votre playlist ?',
+              tkModalRemovePlaylistBody.trParams({'title': music.title}),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.secondaryTextColor.withValues(alpha: 0.85),
@@ -123,7 +124,7 @@ class RemoveFromPlaylistModal extends StatelessWidget {
 
             // ─── Boutons ────────────────────────────────────────────────────
             CustomTextButton(
-              text: 'Retirer',
+              text: tkModalRemovePlaylistBtn.tr,
               height: 52,
               borderRadius: 100,
               onPressed: _confirm,
@@ -134,7 +135,7 @@ class RemoveFromPlaylistModal extends StatelessWidget {
             GestureDetector(
               onTap: () => Get.back(),
               child: Text(
-                'Annuler',
+                tkBtnCancel.tr,
                 style: TextStyle(
                   color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
                   fontSize: 14.sp,

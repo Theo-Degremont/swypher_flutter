@@ -1,6 +1,6 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swypher_flutter/shared/data/models/auth_model.dart';
 
 class MemoryService extends GetxService {
@@ -17,7 +17,12 @@ class MemoryService extends GetxService {
   static final MemoryService _mInstance = MemoryService._();
   static MemoryService get instance => _mInstance;
 
-  late SharedPreferences _prefs;
+  // Refresh token : cache RAM + Keychain/Keystore chiffré (iOS Keychain, Android Keystore)
+  String? _refreshCache;
+  final _secureStorage = const FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
+
   late GetStorage _storage;
 
   MemoryService._();
@@ -26,7 +31,8 @@ class MemoryService extends GetxService {
     await GetStorage.init('sifflard');
     _storage = GetStorage('sifflard');
 
-    _prefs = await SharedPreferences.getInstance();
+    // Charger le refresh token depuis le stockage sécurisé au démarrage
+    _refreshCache = await _secureStorage.read(key: 'refresh');
 
     final liked     = _storage.read<List>('musicLiked')     ?? [];
     final disliked  = _storage.read<List>('musicDisliked')  ?? [];
@@ -146,9 +152,9 @@ class MemoryService extends GetxService {
   }
 
   /// Vide toutes les données de session (déconnexion / suppression de compte).
-  void clearSessionData() {
-    access  = null;
-    refresh = null;
+  Future<void> clearSessionData() async {
+    access = null;  // RAM uniquement — pas d'I/O
+    await setRefresh(null);
     clearCurrentUser();
     clearLocalAvatarPath();
     clearLiked();
@@ -158,29 +164,21 @@ class MemoryService extends GetxService {
     _storage.write('likedMusicIds', <String>[]);
   }
 
-  String? get access {
-    final value = _prefs.getString('access');
-    return value;
-  }
+  // ─── Access token : RAM uniquement ───────────────────────────────────────────
+  // Champ public direct : pas de disque, pas de chiffrement — la durée de vie
+  // de 15 min rend le stockage persistant inutile.
+  String? access;
 
-  set access(String? value) {
+  // ─── Refresh token : Keychain (iOS) / Keystore (Android) ─────────────────────
+
+  String? get refresh => _refreshCache;
+
+  Future<void> setRefresh(String? value) async {
+    _refreshCache = value;
     if (value == null) {
-      _prefs.remove('access');
+      await _secureStorage.delete(key: 'refresh');
     } else {
-      _prefs.setString('access', value);
-    }
-  }
-
-  String? get refresh {
-    final value = _prefs.getString('refresh');
-    return value;
-  }
-
-  set refresh(String? value) {
-    if (value == null) {
-      _prefs.remove('refresh');
-    } else {
-      _prefs.setString('refresh', value);
+      await _secureStorage.write(key: 'refresh', value: value);
     }
   }
 

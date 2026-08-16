@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/constants/text_keys.dart';
 import 'package:swypher_flutter/shared/data/network/music_api.dart';
 import 'package:swypher_flutter/shared/services/memory_service.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_text_button.dart';
@@ -90,7 +91,7 @@ class RepostModal extends StatelessWidget {
 
             // ─── Titre ──────────────────────────────────────────────────────
             Text(
-              'Reposter ce mix ?',
+              tkModalRepostTitle.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.primaryTextColor,
@@ -105,9 +106,7 @@ class RepostModal extends StatelessWidget {
 
             // ─── Description ────────────────────────────────────────────────
             Text(
-              'Tu t\'apprêtes à reposter "$musicTitle".\n\n'
-              'Ce son apparaîtra sur ton profil et sera visible par tes abonnés.'
-              'Cette action est définitive.',
+              tkModalRepostBody.trParams({'title': musicTitle}),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.secondaryTextColor.withValues(alpha: 0.85),
@@ -123,7 +122,7 @@ class RepostModal extends StatelessWidget {
 
             // ─── Boutons ────────────────────────────────────────────────────
             CustomTextButton(
-              text: 'Reposter',
+              text: tkModalRepostBtn.tr,
               height: 52,
               borderRadius: 100,
               onPressed: _confirm,
@@ -134,7 +133,7 @@ class RepostModal extends StatelessWidget {
             GestureDetector(
               onTap: () => Get.back(),
               child: Text(
-                'Annuler',
+                tkBtnCancel.tr,
                 style: TextStyle(
                   color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
                   fontSize: 14.sp,

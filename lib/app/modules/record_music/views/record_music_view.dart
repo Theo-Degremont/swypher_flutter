@@ -191,7 +191,7 @@ class RecordMusicView extends GetView<RecordMusicController> {
                                                     size: 30.w,
                                                   ),
                                                   Text(
-                                                    'Supprimer'.toUpperCase(),
+                                                    tkBtnDelete.tr.toUpperCase(),
                                                     style: TextStyle(
                                                       color: AppColors
                                                           .tertiaryColor,
@@ -222,7 +222,7 @@ class RecordMusicView extends GetView<RecordMusicController> {
                         : Padding(
                             padding: EdgeInsets.only(top: 20.h),
                             child: CustomTextButton(
-                              text: 'Continuer',
+                              text: tkBtnContinue.tr,
                               onPressed: controller.goToCompleteMusic,
                               height: 60,
                               borderRadius: 100,

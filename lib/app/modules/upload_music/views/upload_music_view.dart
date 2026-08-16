@@ -32,7 +32,7 @@ class UploadMusicView extends GetView<UploadMusicController> {
                   : Padding(
                       padding: EdgeInsets.only( bottom: 10.h),
                       child: Text(
-                        'Importer vos fichiers',
+                        tkTitleUploadMusic.tr,
                         style: TextStyle(
                           fontSize: 24.sp,
                           color: AppColors.primaryTextColor,
@@ -51,7 +51,7 @@ class UploadMusicView extends GetView<UploadMusicController> {
                   : Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40.w),
                       child: Text(
-                        'Commencez votre projet en important une topline, votre voix, ou les deux pour un mixage complet.',
+                        tkUploadMusicSubtitle.tr,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14.sp,
@@ -125,7 +125,7 @@ class UploadMusicView extends GetView<UploadMusicController> {
                 spacing: 10.h,
                 children: [
                   Text(
-                    'Topline',
+                    tkTabTopline.tr,
                     style: TextStyle(
                       fontSize: 24.sp,
                       color: AppColors.primaryTextColor,
@@ -158,7 +158,7 @@ class UploadMusicView extends GetView<UploadMusicController> {
                 spacing: 10.h,
                 children: [
                   Text(
-                    'Voix',
+                    tkUploadVoice.tr,
                     style: TextStyle(
                       fontSize: 24.sp,
                       color: AppColors.primaryTextColor,
@@ -182,7 +182,7 @@ class UploadMusicView extends GetView<UploadMusicController> {
               () =>controller.toplineFile.value != null ||
                       controller.voiceFile.value != null
                   ?  CustomTextButton(
-                text: 'Continuer',
+                text: tkBtnContinue.tr,
                 onPressed: () => controller.goToCompleteMusic(),
                 borderRadius: 100,
                 height: 60,

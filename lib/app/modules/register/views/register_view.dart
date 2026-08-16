@@ -28,7 +28,7 @@ class RegisterView extends GetView<RegisterController> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 30.h),
                 child: Text(
-                  'Inscription',
+                  tkTitleRegister.tr,
                   style: TextStyle(
                     fontSize: 24.sp,
                     color: AppColors.primaryTextColor,
@@ -58,8 +58,8 @@ class RegisterView extends GetView<RegisterController> {
                         focusNode: controller.usernameFocusNode,
                         isFocused: controller.usernameIsFocused,
                         controller: controller.usernameController,
-                        labelText: 'Nom d\'utilisateur',
-                        hintText: 'Entrez votre nom d\'utilisateur',
+                        labelText: tkLabelUsername.tr,
+                        hintText: tkHintUsername.tr,
                         prefixIcon: Icons.person_outline,
                         textInputAction: TextInputAction.next,
                         errorText: controller.usernameError.value,
@@ -74,8 +74,8 @@ class RegisterView extends GetView<RegisterController> {
                         isFocused: controller.emailIsFocused,
                         controller: controller.emailController,
                         keyboardType: TextInputType.emailAddress,
-                        labelText: 'Email',
-                        hintText: 'Entrez votre adresse email',
+                        labelText: tkLabelEmail.tr,
+                        hintText: tkHintEmail.tr,
                         prefixIcon: Icons.email_outlined,
                         textInputAction: TextInputAction.next,
                         errorText: controller.emailError.value,
@@ -91,8 +91,8 @@ class RegisterView extends GetView<RegisterController> {
                         controller: controller.passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         height: 130,
-                        labelText: 'Mot de passe',
-                        hintText: 'Entrez votre mot de passe',
+                        labelText: tkLabelPassword.tr,
+                        hintText: tkHintPassword.tr,
                         prefixIcon: Icons.lock_outline,
                         obscureText: !controller.isPasswordVisible.value,
                         showEyeIcon: true,
@@ -105,7 +105,7 @@ class RegisterView extends GetView<RegisterController> {
                     Obx(
                       () => CustomTextButton(
                         onPressed: controller.register,
-                        text: 'Créer mon compte',
+                        text: tkBtnRegister.tr,
                         isLoading: controller.isLoading.value,
                         isEnabled: controller.isButtonEnabled.value,
                       ),
@@ -116,7 +116,7 @@ class RegisterView extends GetView<RegisterController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Déjà un compte ?',
+                          tkRegisterHaveAccount.tr,
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: AppColors.secondaryTextColor,
@@ -129,7 +129,7 @@ class RegisterView extends GetView<RegisterController> {
                         GestureDetector(
                           onTap: () => controller.navigateToLogin(),
                           child: Text(
-                            'Connectez-vous',
+                            tkRegisterLoginLink.tr,
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: AppColors.primaryColor,

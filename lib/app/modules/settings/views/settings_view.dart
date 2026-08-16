@@ -93,12 +93,12 @@ class SettingsView extends GetView<SettingsController> {
               ),
               SizedBox(height: 20.h),
 
-              _SectionLabel('Account'),
+              _SectionLabel(tkSettingsSectionAccount.tr),
               SizedBox(height: 8.h),
               _SettingsCard(children: [
                 _SettingsRow(
                   icon: Icons.lock_outline_sharp,
-                  label: 'Modifier le mot de passe',
+                  label: tkSettingsChangePassword.tr,
                   trailing: Icon(Icons.arrow_forward_ios, color: AppColors.secondaryTextColor, size: 16.sp),
                   onTap: () => controller.goToUpdatePassword(),
                 ),
@@ -106,18 +106,18 @@ class SettingsView extends GetView<SettingsController> {
               SizedBox(height: 20.h),
             ],
 
-            _SectionLabel('Preferences'),
+            _SectionLabel(tkSettingsSectionPreferences.tr),
             SizedBox(height: 8.h),
             _SettingsCard(children: [
               // Notifications
               Obx(() => _SettingsRow(
                 icon: Icons.notifications_none_sharp,
-                label: 'Notifications',
+                label: tkSettingsNotifications.tr,
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      controller.notificationsEnabled.value ? 'On' : 'Off',
+                      controller.notificationsEnabled.value ? tkOn.tr : tkOff.tr,
                       style: TextStyle(
                         color: AppColors.secondaryTextColor,
                         fontSize: 14.sp,
@@ -161,13 +161,13 @@ class SettingsView extends GetView<SettingsController> {
                     if (expanded) ...[
                       _Divider(),
                       _LanguageOption(
-                        label: 'Français',
+                        label: tkLangFrench.tr,
                         selected: (controller.memory.languageCode ?? 'fr') == 'fr',
                         onTap: () => controller.setLanguage('fr'),
                       ),
                       _Divider(),
                       _LanguageOption(
-                        label: 'English',
+                        label: tkLangEnglish.tr,
                         selected: controller.memory.languageCode == 'en',
                         onTap: () => controller.setLanguage('en'),
                       ),
@@ -178,31 +178,31 @@ class SettingsView extends GetView<SettingsController> {
             ]),
             SizedBox(height: 20.h),
 
-            _SectionLabel('Privacy & CGU'),
+            _SectionLabel(tkSettingsSectionPrivacy.tr),
             SizedBox(height: 8.h),
             _SettingsCard(children: [
               _SettingsRow(
                 icon: Icons.privacy_tip_sharp,
-                label: 'Politique de confidentialité',
+                label: tkSettingsPrivacyPolicy.tr,
                 trailing: Icon(Icons.arrow_forward_ios, color: AppColors.secondaryTextColor, size: 16.sp),
                 onTap: () => controller.goToPrivacyPolicy(),
               ),
               _Divider(),
               _SettingsRow(
                 icon: Icons.security_sharp,
-                label: 'CGU',
+                label: tkSettingsCgu.tr,
                 trailing: Icon(Icons.arrow_forward_ios, color: AppColors.secondaryTextColor, size: 16.sp),
                 onTap: () => controller.goToCgu(),
               ),
             ]),
             SizedBox(height: 20.h),
 
-            _SectionLabel('Support'),
+            _SectionLabel(tkSettingsSectionSupport.tr),
             SizedBox(height: 8.h),
             _SettingsCard(children: [
               _SettingsRow(
                 icon: Icons.help_outline_sharp,
-                label: 'Centre d\'aide',
+                label: tkSettingsHelpCenter.tr,
                 trailing: Icon(Icons.launch_sharp, color: AppColors.secondaryTextColor, size: 20.sp),
                 onTap: controller.openHelpEmail,
               ),
@@ -216,7 +216,7 @@ class SettingsView extends GetView<SettingsController> {
                       children: [
                         Icon(Icons.info_sharp, color: AppColors.primaryColor, size: 20.sp),
                         SizedBox(width: 8.w),
-                        Text('Version', style: TextStyle(
+                        Text(tkVersion.tr, style: TextStyle(
                           color: AppColors.primaryTextColor,
                           fontSize: 16.sp,
                           fontFamily: AppFonts.montserrat,
@@ -236,7 +236,7 @@ class SettingsView extends GetView<SettingsController> {
             if (isLoggedIn) ...[
               SizedBox(height: 20.h),
               Obx(() => CustomTextButton(
-                text: 'Déconnexion',
+                text: tkBtnLogout.tr,
                 onPressed: controller.logout,
                 isLoading: controller.isLoading.value,
                 icon: Icons.logout,
@@ -250,7 +250,7 @@ class SettingsView extends GetView<SettingsController> {
               )),
               SizedBox(height: 20.h),
               CustomTextButton(
-                text: 'Supprimer mon compte',
+                text: tkBtnDeleteAccount.tr,
                 onPressed: () => DeleteAccountModal.show(
                   onConfirm: controller.deleteAccount,
                 ),

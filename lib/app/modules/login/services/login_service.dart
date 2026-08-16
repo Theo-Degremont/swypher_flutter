@@ -21,7 +21,7 @@ class LoginService extends GetxService {
 
     if (response.isSuccess && response.data != null) {
       _memory.access = response.data!.tokens.accessToken;
-      _memory.refresh = response.data!.tokens.refreshToken;
+      await _memory.setRefresh(response.data!.tokens.refreshToken);
     }
 
     return response;

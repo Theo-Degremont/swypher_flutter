@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/constants/text_keys.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_text_button.dart';
 
 class HeadphoneModal extends StatelessWidget {
@@ -83,7 +84,7 @@ class HeadphoneModal extends StatelessWidget {
 
             // ─── Titre ───────────────────────────────────────────────────────
             Text(
-              'Écouteurs requis',
+              tkModalHeadphoneTitle.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.primaryTextColor,
@@ -98,8 +99,7 @@ class HeadphoneModal extends StatelessWidget {
 
             // ─── Description ─────────────────────────────────────────────────
             Text(
-              'Des écouteurs sont nécessaires pour enregistrer un son.\n\n'
-              'Sans écouteurs, la topline serait captée par le microphone et se retrouverait dans ton enregistrement.',
+              tkModalHeadphoneBody.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.secondaryTextColor.withValues(alpha: 0.85),
@@ -115,7 +115,7 @@ class HeadphoneModal extends StatelessWidget {
 
             // ─── Bouton ──────────────────────────────────────────────────────
             CustomTextButton(
-              text: 'J\'ai compris',
+              text: tkModalHeadphoneBtn.tr,
               height: 52,
               borderRadius: 100,
               onPressed: () => Get.back(),

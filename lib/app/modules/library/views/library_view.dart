@@ -81,7 +81,7 @@ class LibraryView extends GetView<LibraryController> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Ma Playlist',
+                                tkLibraryTitle.tr,
                                 style: TextStyle(
                                   fontSize: 25.sp,
                                   fontFamily: AppFonts.poppins,
@@ -93,7 +93,7 @@ class LibraryView extends GetView<LibraryController> {
                               Row(
                                 children: [
                                   Text(
-                                    '${controller.likedMusics.length} Tracks',
+                                    '${controller.likedMusics.length} ${tkTracks.tr}',
                                     style: TextStyle(
                                       fontSize: 16.sp,
                                       fontFamily: AppFonts.montserrat,
@@ -152,7 +152,7 @@ class LibraryView extends GetView<LibraryController> {
                         padding: EdgeInsets.only(top: 60.h),
                         child: Center(
                           child: Text(
-                            'Aucune musique dans votre playlist pour le moment',
+                            tkLibraryNoMusic.tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 15.sp,

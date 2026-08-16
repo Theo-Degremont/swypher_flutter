@@ -91,9 +91,9 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                             controller: controller.titleMusicController,
                             isFocused: controller.titleMusicIsFocused,
                             focusNode: controller.titleMusicFocusNode,
-                            hintText: 'Entrez le titre de la musique / topline',
+                            hintText: tkCompleteMusicTitleHint.tr,
                             keyboardType: TextInputType.name,
-                            labelText: 'Titre de la musique / topline',
+                            labelText: tkCompleteMusicTitleLabel.tr,
                             fontFamilyLabel: AppFonts.poppins,
                             textColorLabel: AppColors.primaryTextColor,
                             fontSizeLabel: 16.0,
@@ -104,9 +104,9 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                             controller: controller.speakingController,
                             isFocused: controller.speakingIsFocused,
                             focusNode: controller.speakingFocusNode,
-                            hintText: 'Entrez les paroles de la musique',
+                            hintText: tkCompleteMusicLyricsHint.tr,
                             keyboardType: TextInputType.multiline,
-                            labelText: 'Paroles',
+                            labelText: tkCompleteMusicLyricsLabel.tr,
                             fontFamilyLabel: AppFonts.poppins,
                             textColorLabel: AppColors.primaryTextColor,
                             fontSizeLabel: 16.0,
@@ -117,7 +117,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                           Padding(
                             padding: EdgeInsets.only(left: 8.w),
                             child: Text(
-                              'Image de couverture',
+                              tkCompleteMusicCover.tr,
                               style: TextStyle(
                                 color: AppColors.primaryTextColor,
                                 fontSize: 16.sp,
@@ -137,7 +137,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                           Padding(
                             padding: EdgeInsets.only(left: 8.w),
                             child: Text(
-                              'Réglages des volumes',
+                              tkCompleteMusicVolumeSettings.tr,
                               style: TextStyle(
                                 color: AppColors.primaryTextColor,
                                 fontSize: 16.sp,
@@ -169,7 +169,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                               children: [
                                 Obx(
                                   () => SliderWidget(
-                                    label: 'Volume Voix',
+                                    label: tkCompleteMusicVolumeVoice.tr,
                                     value: controller.voiceVolume.value,
                                     onChanged: (v) =>
                                         controller.voiceVolume.value = v,
@@ -177,7 +177,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                                 ),
                                 Obx(
                                   () => SliderWidget(
-                                    label: 'Volume Musique',
+                                    label: tkCompleteMusicVolumeMusic.tr,
                                     value: controller.musicVolume.value,
                                     onChanged: (v) =>
                                         controller.musicVolume.value = v,
@@ -189,7 +189,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                           Padding(
                             padding: EdgeInsets.only(left: 8.w),
                             child: Text(
-                              'Visibilité',
+                              tkCompleteMusicVisibility.tr,
                               style: TextStyle(
                                 color: AppColors.primaryTextColor,
                                 fontSize: 16.sp,
@@ -246,7 +246,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                                           ),
                                         ),
                                         child: Text(
-                                          'Publique',
+                                          tkVisibilityPublic.tr,
                                           style: TextStyle(
                                             color:
                                                 controller.status.value ==
@@ -292,7 +292,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                                           ),
                                         ),
                                         child: Text(
-                                          'Privé',
+                                          tkVisibilityPrivate.tr,
                                           style: TextStyle(
                                             color:
                                                 controller.status.value ==
@@ -336,7 +336,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                                           ),
                                         ),
                                         child: Text(
-                                          'Brouillon',
+                                          tkTabDraft.tr,
                                           style: TextStyle(
                                             color:
                                                 controller.status.value ==
@@ -361,7 +361,7 @@ class CompleteMusicView extends GetView<CompleteMusicController> {
                   ),
                   Obx(
                     () => CustomTextButton(
-                      text: 'Poster le son',
+                      text: tkBtnPostSound.tr,
                       onPressed: controller.postMusic,
                       isLoading: controller.isLoading.value,
                       isEnabled: !controller.isLoading.value,

@@ -36,7 +36,7 @@ class UpdatePasswordView extends GetView<SettingsController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Modifier le mot de passe',
+                      tkTitleUpdatePassword.tr,
                       style: TextStyle(
                         fontSize: 22.sp,
                         color: AppColors.primaryTextColor,
@@ -51,7 +51,7 @@ class UpdatePasswordView extends GetView<SettingsController> {
                       focusNode: controller.currentPasswordFocus,
                       isFocused: controller.currentPasswordFocused,
                       controller: controller.currentPasswordCtrl,
-                      labelText: 'Mot de passe actuel',
+                      labelText: tkLabelCurrentPassword.tr,
                       hintText: '••••••••',
                       obscureText: controller.obscureCurrentPassword.value,
                       showEyeIcon: true,
@@ -66,7 +66,7 @@ class UpdatePasswordView extends GetView<SettingsController> {
                       focusNode: controller.newPasswordFocus,
                       isFocused: controller.newPasswordFocused,
                       controller: controller.newPasswordCtrl,
-                      labelText: 'Nouveau mot de passe',
+                      labelText: tkLabelNewPassword.tr,
                       hintText: '••••••••',
                       obscureText: controller.obscureNewPassword.value,
                       showEyeIcon: true,
@@ -81,7 +81,7 @@ class UpdatePasswordView extends GetView<SettingsController> {
                       focusNode: controller.confirmPasswordFocus,
                       isFocused: controller.confirmPasswordFocused,
                       controller: controller.confirmPasswordCtrl,
-                      labelText: 'Confirmer le nouveau mot de passe',
+                      labelText: tkLabelConfirmPassword.tr,
                       hintText: '••••••••',
                       obscureText: controller.obscureConfirmPassword.value,
                       showEyeIcon: true,
@@ -101,7 +101,7 @@ class UpdatePasswordView extends GetView<SettingsController> {
               child: Obx(() => CustomTextButton(
                 onPressed: controller.updatePassword,
                 isLoading: controller.isUpdatingPassword.value,
-                text: 'Modifier le mot de passe',
+                text: tkBtnUpdatePassword.tr,
                 borderRadius: 50,
               )),
             ),
