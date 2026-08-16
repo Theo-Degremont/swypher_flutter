@@ -36,7 +36,7 @@ class SearchView extends GetView<SearchController> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: AppColors.backgroundColor,
-                    hintText: 'Rechercher des sons, des artistes...',
+                    hintText: tkSearchHint.tr,
                     hintStyle: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.secondaryTextColor.withValues(alpha: 0.3),
@@ -102,7 +102,7 @@ class SearchView extends GetView<SearchController> {
                       SizedBox(height: 20.h),
                       Center(
                         child: Obx(() => CustomTabBar(
-                          tabs: const ['Musique', 'Topline'],
+                          tabs: [tkTabMusic.tr, tkTabTopline.tr],
                           selectedIndex: controller.selectedTab.value,
                           onTap: controller.selectTab,
                           spacing: 24,
@@ -119,7 +119,7 @@ class SearchView extends GetView<SearchController> {
                           if (list.isEmpty) {
                             return Center(
                               child: Text(
-                                'Aucun résultat dans cette catégorie',
+                                tkSearchNoResultCategory.tr,
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: AppColors.secondaryTextColor
@@ -169,7 +169,7 @@ class _EmptyState extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           Text(
-            'Découvrez de nouveaux sons',
+            tkSearchDiscoverSounds.tr,
             style: TextStyle(
               fontSize: 16.sp,
               color: AppColors.primaryTextColor.withValues(alpha: 0.7),
@@ -179,7 +179,7 @@ class _EmptyState extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Tapez un titre, un artiste ou un style...',
+            tkSearchDiscoverHint.tr,
             style: TextStyle(
               fontSize: 13.sp,
               color: AppColors.secondaryTextColor.withValues(alpha: 0.5),
@@ -205,7 +205,7 @@ class _SearchHistoryState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Récentes recherches',
+              tkSearchRecent.tr,
               style: TextStyle(
                 fontSize: 22.sp,
                 color: AppColors.primaryTextColor,
@@ -217,7 +217,7 @@ class _SearchHistoryState extends StatelessWidget {
               onTap: controller.clearAllHistory,
               behavior: HitTestBehavior.opaque,
               child: Text(
-                'Tout effacer',
+                tkSearchClearAll.tr,
                 style: TextStyle(
                   fontSize: 14.sp,
                   color: AppColors.tertiaryColor,
@@ -301,7 +301,7 @@ class _NoResultState extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           Text(
-            'Aucun résultat',
+            tkSearchNoResult.tr,
             style: TextStyle(
               fontSize: 16.sp,
               color: AppColors.primaryTextColor.withValues(alpha: 0.7),
@@ -311,7 +311,7 @@ class _NoResultState extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Essayez avec d\'autres mots-clés',
+            tkSearchNoResultHint.tr,
             style: TextStyle(
               fontSize: 13.sp,
               color: AppColors.secondaryTextColor.withValues(alpha: 0.5),

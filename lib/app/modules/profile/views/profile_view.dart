@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
 import 'package:swypher_flutter/shared/constants/fonts.dart';
+import 'package:swypher_flutter/shared/constants/text_keys.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_icon_button.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_tab_bar.dart';
@@ -88,7 +89,7 @@ class ProfileView extends GetView<ProfileController> {
                     if (controller.isEditMode.value) {
                       return _ProfileTextField(
                         controller: controller.stageNameCtrl,
-                        hint: 'Nom de scène',
+                        hint: tkLabelStageName.tr,
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
                         textAlign: TextAlign.center,
@@ -112,7 +113,7 @@ class ProfileView extends GetView<ProfileController> {
                     if (controller.isEditMode.value) {
                       return _ProfileTextField(
                         controller: controller.pseudoCtrl,
-                        hint: 'Pseudo',
+                        hint: tkLabelPseudo.tr,
                         prefix: '@',
                         fontSize: 15.sp,
                         fontWeight: FontWeight.normal,
@@ -139,7 +140,7 @@ class ProfileView extends GetView<ProfileController> {
                       padding: EdgeInsets.only(top: 10.h, bottom: 4.h),
                       child: _ProfileTextField(
                         controller: controller.descriptionCtrl,
-                        hint: 'Description',
+                        hint: tkLabelDescription.tr,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.normal,
                         textAlign: TextAlign.center,
@@ -161,7 +162,7 @@ class ProfileView extends GetView<ProfileController> {
                             child: GestureDetector(
                               onTap: controller.cancelEditMode,
                               child: Text(
-                                'Annuler la modification',
+                                tkBtnCancelEdit.tr,
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontFamily: AppFonts.montserrat,
@@ -174,8 +175,8 @@ class ProfileView extends GetView<ProfileController> {
                           ),
                         CustomTextButton(
                           text: isEdit
-                              ? 'Confirmer la modification'
-                              : 'Modifier mon profil',
+                              ? tkBtnConfirmEdit.tr
+                              : tkBtnEditProfile.tr,
                           isLoading: controller.isSaving.value,
                           onPressed: isEdit
                               ? controller.confirmEdit
@@ -228,7 +229,7 @@ class ProfileView extends GetView<ProfileController> {
                             ),
                           ),
                           Text(
-                            'Posts',
+                            tkTabPosts.tr,
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.normal,
@@ -245,11 +246,11 @@ class ProfileView extends GetView<ProfileController> {
 
                   Obx(
                     () => CustomTabBar(
-                      tabs: const [
-                        'Musiques',
-                        'Prods',
-                        'Republication',
-                        'Brouillon',
+                      tabs: [
+                        tkTabMusics.tr,
+                        tkTabProds.tr,
+                        tkTabRepublication.tr,
+                        tkTabDraft.tr,
                       ],
                       selectedIndex: controller.selectedTab.value,
                       onTap: controller.selectTab,
@@ -282,7 +283,7 @@ class ProfileView extends GetView<ProfileController> {
                         padding: EdgeInsets.only(top: 60.h),
                         child: Center(
                           child: Text(
-                            'Aucun contenu pour le moment',
+                            tkProfileNoContent.tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 15.sp,

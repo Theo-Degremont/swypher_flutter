@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/constants/text_keys.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_text_button.dart';
 
@@ -90,7 +91,7 @@ class DeleteMusicModal extends StatelessWidget {
             SizedBox(height: 20.h),
 
             Text(
-              'Supprimer la musique ?',
+              tkModalDeleteMusicTitle.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.primaryTextColor,
@@ -104,7 +105,7 @@ class DeleteMusicModal extends StatelessWidget {
             SizedBox(height: 12.h),
 
             Text(
-              'Êtes-vous sûr de vouloir supprimer "${music.title}" ? Cette action est irréversible.',
+              tkModalDeleteMusicBody.trParams({'title': music.title}),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.secondaryTextColor.withValues(alpha: 0.85),
@@ -119,7 +120,7 @@ class DeleteMusicModal extends StatelessWidget {
             SizedBox(height: 28.h),
 
             CustomTextButton(
-              text: 'Supprimer',
+              text: tkModalDeleteMusicBtn.tr,
               height: 52,
               borderRadius: 100,
               onPressed: _confirm,
@@ -130,7 +131,7 @@ class DeleteMusicModal extends StatelessWidget {
             GestureDetector(
               onTap: () => Get.back(),
               child: Text(
-                'Annuler',
+                tkBtnCancel.tr,
                 style: TextStyle(
                   color: AppColors.secondaryTextColor.withValues(alpha: 0.6),
                   fontSize: 14.sp,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/constants/text_keys.dart';
 import 'package:swypher_flutter/shared/widgets/custom/custom_bloc_button.dart';
 import '../controllers/music_studio_controller.dart';
 
@@ -17,7 +18,7 @@ class MusicStudioView extends GetView<MusicStudioController> {
         Padding(
           padding: EdgeInsets.symmetric(vertical: 10.h),
           child: Text(
-            'Music Studio',
+            tkTitleMusicStudio.tr,
             style: TextStyle(
               fontSize: 24.sp,
               color: AppColors.primaryTextColor,
@@ -28,7 +29,7 @@ class MusicStudioView extends GetView<MusicStudioController> {
           ),
         ),
         Text(
-          'Prêt à créer votre prochain hit ? Choisissez votre point de départ.',
+          tkMusicStudioSubtitle.tr,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14.sp,
@@ -40,8 +41,8 @@ class MusicStudioView extends GetView<MusicStudioController> {
           ),
         ),
         CustomBlocButton(
-          title: 'Enregister ma voix',
-          subtitle: 'Enregistre ton couplet sur une topline',
+          title: tkMusicStudioRecord.tr,
+          subtitle: tkMusicStudioRecordHint.tr,
           icon: Icons.mic_sharp,
           isGradient: true,
           onPressed: () {
@@ -49,8 +50,8 @@ class MusicStudioView extends GetView<MusicStudioController> {
           },
         ),
         CustomBlocButton(
-          title: 'Importer un fichier audio',
-          subtitle: 'Importer tout type de fichier audio pour le partager',
+          title: tkMusicStudioImport.tr,
+          subtitle: tkMusicStudioImportHint.tr,
           icon: Icons.upload_file_outlined,
           isGradient: false,
           onPressed: () {

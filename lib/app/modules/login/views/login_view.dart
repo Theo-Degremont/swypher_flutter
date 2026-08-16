@@ -29,7 +29,7 @@ class LoginView extends GetView<LoginController> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 30.h),
                 child: Text(
-                  'Connexion',
+                  tkTitleLogin.tr,
                   style: TextStyle(
                     fontSize: 24.sp,
                     color: AppColors.primaryTextColor,
@@ -60,8 +60,8 @@ class LoginView extends GetView<LoginController> {
                         isFocused: controller.emailIsFocused,
                         controller: controller.emailController,
                         keyboardType: TextInputType.emailAddress,
-                        labelText: 'Email',
-                        hintText: 'Entrez votre adresse email',
+                        labelText: tkLabelEmail.tr,
+                        hintText: tkHintEmail.tr,
                         prefixIcon: Icons.email_outlined,
                         textInputAction: TextInputAction.next,
                         errorText: controller.emailError.value,
@@ -77,8 +77,8 @@ class LoginView extends GetView<LoginController> {
                         controller: controller.passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         height: 130,
-                        labelText: 'Mot de passe',
-                        hintText: 'Entrez votre mot de passe',
+                        labelText: tkLabelPassword.tr,
+                        hintText: tkHintPassword.tr,
                         prefixIcon: Icons.lock_outline,
                         obscureText: !controller.isPasswordVisible.value,
                         showEyeIcon: true,
@@ -91,7 +91,7 @@ class LoginView extends GetView<LoginController> {
                     Obx(
                       () => CustomTextButton(
                         onPressed: controller.login,
-                        text: 'Se connecter',
+                        text: tkBtnLogin.tr,
                         isLoading: controller.isLoading.value,
                         isEnabled: controller.isButtonEnabled.value,
                       ),
@@ -102,7 +102,7 @@ class LoginView extends GetView<LoginController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Pas encore de compte ?',
+                          tkLoginNoAccount.tr,
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: AppColors.secondaryTextColor,
@@ -115,7 +115,7 @@ class LoginView extends GetView<LoginController> {
                         GestureDetector(
                           onTap: () => controller.navigateToRegister(),
                           child: Text(
-                            'Inscrivez-vous',
+                            tkLoginSignUp.tr,
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: AppColors.primaryColor,

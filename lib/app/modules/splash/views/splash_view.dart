@@ -63,7 +63,7 @@ class SplashView extends GetView<SplashController> {
                     height: 200.h,
                   ),
                   Text(
-                    'Le prochain son commence ici'.toUpperCase(),
+                    tkSplashTagline.tr.toUpperCase(),
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontFamily: AppFonts.montserrat,
@@ -129,7 +129,7 @@ class SplashView extends GetView<SplashController> {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        'Initialisation du studio'.toUpperCase(),
+                        tkSplashInit.tr.toUpperCase(),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontFamily: AppFonts.montserrat,
@@ -164,7 +164,7 @@ class SplashView extends GetView<SplashController> {
                     () => Text(
                       controller.version.value.isEmpty
                           ? ''
-                          : 'Version ${controller.version.value}'.toUpperCase(),
+                          : '${tkVersion.tr} ${controller.version.value}'.toUpperCase(),
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontFamily: AppFonts.montserrat,
