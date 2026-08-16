@@ -194,6 +194,7 @@ class ProfileController extends GetxController {
     if (index < 0 || index >= list.length) return;
     currentIndex.value = index;
     final music = list[index];
+    _audio.setQueue(list.toList(), index);
     _audio.play(AudioType.music, _resolveUrl(music.audioFile));
     _audio.setCurrentMusic(music, resolveCoverUrl(music.coverImage));
     _audio.listenToMusicComplete(() {

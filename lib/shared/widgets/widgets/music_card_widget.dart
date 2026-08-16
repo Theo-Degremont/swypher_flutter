@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:swypher_flutter/app/modules/home/controllers/home_controller.dart';
 import 'package:swypher_flutter/shared/constants/constants.dart';
 import 'package:swypher_flutter/shared/data/config/api_configuration.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
@@ -97,18 +96,18 @@ class _SpinningDiscState extends State<_SpinningDisc>
 }
 
 class MusicCardWidget extends StatelessWidget {
-  const MusicCardWidget({super.key, required this.music});
+  const MusicCardWidget({super.key, required this.music, this.topMargin = 0.0});
 
   final MusicModel music;
+  final double topMargin;
 
   @override
   Widget build(BuildContext context) {
     final audio = AudioService.to;
-    final homeCtrl = Get.find<HomeController>();
     final memory = MemoryService.instance;
 
     return Container(
-      margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 35.h),
+      margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 35.h, top: topMargin.h),
       height: 560.h,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -384,7 +383,7 @@ class MusicCardWidget extends StatelessWidget {
               Obx(
                 () => PlayButtonWidget(
                   isPlaying: audio.isPlayingRx(AudioType.music).value,
-                  onPressed: homeCtrl.togglePlay,
+                  onPressed: audio.toggleMusicPlay,
                 ),
               ),
               CustomIconButton(

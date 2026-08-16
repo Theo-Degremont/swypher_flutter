@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:swypher_flutter/shared/data/config/api_configuration.dart';
-import 'package:swypher_flutter/shared/data/network/music_api.dart';
+import 'package:swypher_flutter/app/modules/home/services/home_service.dart';
 import 'package:swypher_flutter/shared/data/models/music_model.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
 
 class HomeController extends GetxController {
+  late final HomeService _service;
+
   // ─── Tab ─────────────────────────────────────────────────────────────────────
 
   final selectedTab = 0.obs;
@@ -38,6 +39,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _service              = Get.find<HomeService>();
     musicPageController   = PageController();
     toplinePageController = PageController();
     _fetchMusicFeed();
@@ -73,21 +75,21 @@ class HomeController extends GetxController {
 
   Future<void> _fetchMusicFeed() async {
     isLoading.value = true;
-    final response = await Get.find<MusicApi>().getFeed();
+    final results = await _service.fetchMusicFeed();
     isLoading.value = false;
-    if (response.isSuccess && (response.data?.isNotEmpty ?? false)) {
-      musicList.assignAll(response.data!);
+    if (results.isNotEmpty) {
+      musicList.assignAll(results);
       _playMusicAt(0);
     }
   }
 
   Future<void> _fetchToplineFeed() async {
     isLoading.value = true;
-    final response = await Get.find<MusicApi>().getToplineFeed();
+    final results = await _service.fetchToplineFeed();
     isLoading.value = false;
     _toplineFeedFetched = true;
-    if (response.isSuccess && (response.data?.isNotEmpty ?? false)) {
-      toplineList.assignAll(response.data!);
+    if (results.isNotEmpty) {
+      toplineList.assignAll(results);
       _playToplineAt(0);
     }
   }
@@ -95,13 +97,13 @@ class HomeController extends GetxController {
   // ─── Fetch +1 au swipe bas ───────────────────────────────────────────────────
 
   Future<void> _fetchMusicOne() async {
-    final response = await Get.find<MusicApi>().getMusicFeedOne();
-    if (response.isSuccess && response.data != null) musicList.add(response.data!);
+    final music = await _service.fetchMusicOne();
+    if (music != null) musicList.add(music);
   }
 
   Future<void> _fetchToplineOne() async {
-    final response = await Get.find<MusicApi>().getToplineFeedOne();
-    if (response.isSuccess && response.data != null) toplineList.add(response.data!);
+    final music = await _service.fetchToplineOne();
+    if (music != null) toplineList.add(music);
   }
 
   // ─── Lecture ─────────────────────────────────────────────────────────────────
@@ -109,20 +111,22 @@ class HomeController extends GetxController {
   void _playMusicAt(int index) {
     _musicIndex = index;
     final music = musicList[index];
+    _audio.setQueue(musicList.toList(), index);
     _audio
-        .play(AudioType.music, _resolveUrl(music.audioFile))
+        .play(AudioType.music, _service.resolveUrl(music.audioFile))
         .catchError((_) => _onTrackComplete());
-    _audio.setCurrentMusic(music, _resolveCoverUrl(music.coverImage));
+    _audio.setCurrentMusic(music, _service.resolveCoverUrl(music.coverImage));
     _audio.listenToMusicComplete(_onTrackComplete);
   }
 
   void _playToplineAt(int index) {
     _toplineIndex = index;
     final music = toplineList[index];
+    _audio.setQueue(toplineList.toList(), index);
     _audio
-        .play(AudioType.music, _resolveUrl(music.audioFile))
+        .play(AudioType.music, _service.resolveUrl(music.audioFile))
         .catchError((_) => _onTrackComplete());
-    _audio.setCurrentMusic(music, _resolveCoverUrl(music.coverImage));
+    _audio.setCurrentMusic(music, _service.resolveCoverUrl(music.coverImage));
     _audio.listenToMusicComplete(_onTrackComplete);
   }
 
@@ -182,22 +186,5 @@ class HomeController extends GetxController {
     } else {
       _audio.resume(AudioType.music);
     }
-  }
-
-  // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-  String _resolveUrl(String audioFile) {
-    if (audioFile.startsWith('http://') || audioFile.startsWith('https://')) return audioFile;
-    final base = ApiConfiguration.baseUrl;
-    final path = audioFile.startsWith('/') ? audioFile : '/$audioFile';
-    return '$base$path';
-  }
-
-  String? _resolveCoverUrl(String? coverImage) {
-    if (coverImage == null) return null;
-    if (coverImage.startsWith('http://') || coverImage.startsWith('https://')) return coverImage;
-    final base = ApiConfiguration.baseUrl;
-    final path = coverImage.startsWith('/') ? coverImage : '/$coverImage';
-    return '$base$path';
   }
 }

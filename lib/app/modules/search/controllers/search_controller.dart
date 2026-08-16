@@ -112,6 +112,7 @@ class SearchController extends GetxController {
     currentIndex.value = index;
     final music = list[index];
 
+    _audio.setQueue(list.toList(), index);
     _memory.addSearchHistory(music.title);
 
     _audio.play(AudioType.music, _resolveUrl(music.audioFile));

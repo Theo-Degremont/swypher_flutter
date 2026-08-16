@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:swypher_flutter/app/modules/home/controllers/home_controller.dart';
+import 'package:swypher_flutter/app/modules/home/services/home_service.dart';
 import 'package:swypher_flutter/app/modules/library/controllers/library_controller.dart';
 import 'package:swypher_flutter/app/modules/library/services/library_service.dart';
 import 'package:swypher_flutter/app/modules/profile/controllers/profile_controller.dart';
@@ -18,7 +19,7 @@ class MainBinding extends Bindings {
     Get.put<AudioService>(AudioService());
     Get.put<MusicApi>(MusicApi());
 
-    // Sous-contrôleurs enregistrés en premier (MainController en dépend)
+    Get.put<HomeService>(HomeService());
     Get.put<HomeController>(HomeController());
     Get.put<SearchService>(SearchService());
     Get.put<SearchController>(SearchController());
