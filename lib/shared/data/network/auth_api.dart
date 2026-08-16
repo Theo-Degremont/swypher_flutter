@@ -47,6 +47,17 @@ class AuthApi extends GetxService {
         fromData: (data) => RefreshData.fromJson(data as Map<String, dynamic>),
       );
 
+  /// Révoque le refresh token côté serveur (suppression du JTI en base).
+  /// Requiert un access token valide dans le header Authorization.
+  Future<ApiResponse<void>> logout({
+    required String refreshToken,
+  }) =>
+      _client.post<void>(
+        ApiConfiguration.logoutPath,
+        requiresAuth: true,
+        body: {'refreshToken': refreshToken},
+      );
+
   /// Récupère le profil de l'utilisateur connecté (GET /user/me).
   Future<ApiResponse<UserModel>> getMe() =>
       _client.get<UserModel>(

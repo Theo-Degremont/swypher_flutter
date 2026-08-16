@@ -138,13 +138,13 @@ class ApiClient extends GetxService {
         final tokens = json['data']?['tokens'];
         if (tokens is Map<String, dynamic>) {
           _memory.access = tokens['accessToken'] as String?;
-          _memory.refresh = tokens['refreshToken'] as String?;
+          await _memory.setRefresh(tokens['refreshToken'] as String?);
           return true;
         }
       }
       // Refresh échoué → on vide les tokens
       _memory.access = null;
-      _memory.refresh = null;
+      await _memory.setRefresh(null);
       return false;
     } catch (_) {
       return false;

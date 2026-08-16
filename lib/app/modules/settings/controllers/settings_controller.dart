@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:swypher_flutter/app/modules/main/controllers/main_controller.dart';
 import 'package:swypher_flutter/app/modules/settings/services/settings_service.dart';
 import 'package:swypher_flutter/shared/constants/color.dart';
+import 'package:swypher_flutter/shared/data/network/auth_api.dart';
 import 'package:swypher_flutter/shared/services/audio_service.dart';
 import 'package:swypher_flutter/shared/services/memory_service.dart';
 
@@ -170,7 +171,14 @@ class SettingsController extends GetxController {
     _audio.clearCurrentMusic();
     _audio.cancelMusicCompleteListener();
 
-    _memory.clearSessionData();
+    // Révoquer le refresh token côté serveur avant de vider la session locale.
+    // Si la requête échoue (réseau coupé, token déjà expiré), on déconnecte quand même.
+    final refreshToken = _memory.refresh;
+    if (refreshToken != null) {
+      await Get.find<AuthApi>().logout(refreshToken: refreshToken);
+    }
+
+    await _memory.clearSessionData();
 
     isLoading.value = false;
     mainController.isLoggedIn.value  = false;

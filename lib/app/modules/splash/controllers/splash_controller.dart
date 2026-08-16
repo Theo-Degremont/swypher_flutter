@@ -65,11 +65,11 @@ class SplashController extends GetxController
 
       if (response.isSuccess && response.data != null) {
         memory.access = response.data!.tokens.accessToken;
-        memory.refresh = response.data!.tokens.refreshToken;
+        await memory.setRefresh(response.data!.tokens.refreshToken);
       } else {
         // Token expiré ou révoqué → déconnexion propre
         memory.access = null;
-        memory.refresh = null;
+        await memory.setRefresh(null);
       }
     } catch (_) {
       // Erreur réseau : on garde les tokens existants,
